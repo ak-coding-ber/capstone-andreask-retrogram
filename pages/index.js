@@ -1,7 +1,10 @@
+import Form from "@/components/Form/Form";
+
 export default function HomePage() {
   return (
-    <div>
-      <h1>Hello from Next.js</h1>
-    </div>
+    <main>
+      <h1>RETROGRAM</h1>
+      <Form />
+    </main>
   );
 }
