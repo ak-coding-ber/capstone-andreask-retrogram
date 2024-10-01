@@ -72,10 +72,13 @@ export default function UploadPage() {
       formData.append("file", file);
     }
 
-    formData.append("upload_preset", "ak-coding-ber");
+    formData.append(
+      "upload_preset",
+      `${process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET}`
+    );
 
     const data = await fetch(
-      "https://api.cloudinary.com/v1_1/ak-coding-ber/image/upload",
+      `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
       {
         method: "POST",
         body: formData,
@@ -85,6 +88,8 @@ export default function UploadPage() {
     setImageSrc(data.secure_url);
     setUploadData(data);
     // request to an api route to create a new document in mongodb
+    console.log("uploaded data", uploadData);
+    console.log("uploaded data", uploadData);
   }
 
   return (
@@ -101,7 +106,7 @@ export default function UploadPage() {
         <main>
           <h1>Image Uploader</h1>
 
-          <p>Upload your image to Cloudinary!</p>
+          <p>Upload your original Image</p>
 
           <form
             method="post"
