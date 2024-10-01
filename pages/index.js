@@ -23,10 +23,10 @@ export default function HomePage() {
   return (
     <main>
       <h1>RETROGRAM</h1>
-      <Form />
+      {/* <Form /> */}
       {/* {session && <p>Signed in as {session.user.email}.</p>}
       {!session && <p>Not signed in</p>} */}
-      <h2>Or Sign in with Github or Google</h2>
+      <h2>Please sign in with Github or Google</h2>
       <LoginLogoutButton />
     </main>
   );

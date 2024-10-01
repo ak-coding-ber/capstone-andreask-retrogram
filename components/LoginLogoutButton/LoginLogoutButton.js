@@ -10,10 +10,5 @@ export default function LoginLogoutButton() {
       </>
     );
   }
-  return (
-    <>
-      Not signed in <br />
-      <button onClick={() => signIn()}>Sign in</button>
-    </>
-  );
+  return <button onClick={() => signIn()}>Sign in</button>;
 }
