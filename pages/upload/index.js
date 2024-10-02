@@ -89,6 +89,20 @@ export default function UploadPage() {
     setUploadData(data);
 
     // request to an api route to create a new document in mongodb
+    const response = await fetch(`/api/upload/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        imageUrl: data.secure_url, // This is the URL you got from Cloudinary
+      }),
+    });
+    if (response.ok) {
+      console.log("All good. Response was ok.");
+    } else {
+      console.error(`Error: ${response.status}`);
+    }
   }
 
   return (
