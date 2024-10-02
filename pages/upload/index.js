@@ -87,9 +87,8 @@ export default function UploadPage() {
 
     setImageSrc(data.secure_url);
     setUploadData(data);
+
     // request to an api route to create a new document in mongodb
-    console.log("uploaded data", uploadData);
-    console.log("uploaded data", uploadData);
   }
 
   return (
