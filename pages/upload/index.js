@@ -105,54 +105,79 @@ export default function UploadPage() {
     }
   }
 
+  async function handlClickGenerate(e) {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = Object.fromEntries(formData);
+
+    console.log(data.prompt);
+  }
+
   return (
     <>
       <h1>This will be the foto upload page!</h1>
       <LoginLogoutButton />
-      <div>
-        <Head>
-          <title>Image Uploader</title>
-          <meta name="description" content="Upload your image to Cloudinary!" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
+      <Head>
+        <title>Image Uploader</title>
+        <meta name="description" content="Upload your image to Cloudinary!" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
 
-        <main>
-          <h1>Image Uploader</h1>
+      <main>
+        <h1>Image Uploader</h1>
 
-          <p>Upload your original Image</p>
+        <p>Upload your original Image</p>
 
-          <form
-            method="post"
-            onChange={handleOnChange}
-            onSubmit={handleOnSubmit}
-          >
+        <form method="post" onChange={handleOnChange} onSubmit={handleOnSubmit}>
+          <p>
+            <input type="file" name="file" />
+          </p>
+
+          <Image
+            width={400}
+            height={400}
+            src={imageSrc}
+            alt="your uploaded image"
+            style={{ maxWidth: "100%", height: "auto" }}
+          ></Image>
+          {/* <img style={{ width: "400px" }} src={imageSrc} /> */}
+
+          {imageSrc && !uploadData && (
             <p>
-              <input type="file" name="file" />
+              <button>Upload Files</button>
             </p>
+          )}
 
-            <Image
-              width={400}
-              height={400}
-              src={imageSrc}
-              alt="your uploaded image"
-              style={{ maxWidth: "100%", height: "auto" }}
-            ></Image>
-            {/* <img style={{ width: "400px" }} src={imageSrc} /> */}
-
-            {imageSrc && !uploadData && (
-              <p>
-                <button>Upload Files</button>
-              </p>
-            )}
-
-            {/* {uploadData && (
+          {/* {uploadData && (
               <code>
                 <pre>{JSON.stringify(uploadData, null, 2)}</pre>
               </code>
             )} */}
-          </form>
-        </main>
-      </div>
+        </form>
+        <h2>Pixel Image Generator</h2>
+        <p>Pease describe briefly what can be seen in your Image.</p>
+        <form
+          style={{ width: "80%", height: "4rem" }}
+          onSubmit={handlClickGenerate}
+        >
+          <label htmlFor="prompt">Prompt</label>
+          <textarea
+            type="text"
+            id="prompt"
+            name="prompt"
+            maxLength={100}
+            style={{
+              width: "100%",
+              height: "6rem",
+              padding: "1rem",
+              border: "1px solid #ccc",
+              wordBreak: "break-all",
+            }}
+          />
+          <button type="submit">Generate</button>
+        </form>
+      </main>
     </>
   );
 }

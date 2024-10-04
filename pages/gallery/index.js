@@ -32,21 +32,41 @@ export default function GalleryPage() {
       <h1>This will be the gallery page!</h1> <LoginLogoutButton />
       <br />
       <br />
-      {data.length &&
-        data.map((foto) => {
-          return (
-            <Image
-              key={foto.id}
-              width={200}
-              height={200}
-              src={foto.imageUrl}
-              alt="some picture"
-            ></Image>
-          );
-        })}
-      <code>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </code>
+      <main>
+        {data.length &&
+          data.map((foto) => {
+            return (
+              <Image
+                key={foto.id}
+                width={200}
+                height={200}
+                src={foto.imageUrl}
+                alt="gallery image"
+              ></Image>
+            );
+          })}
+        <code
+          style={{
+            display: "block",
+            width: "100%",
+            height: "30rem",
+            overflow: "auto",
+          }}
+        >
+          <pre
+            style={{
+              width: "100%",
+              height: "20rem",
+              whiteSpace: "pre-wrap",
+              wordWrap: "break-word",
+              overflow: "auto",
+            }}
+          >
+            {/* just temporary to see directly how the data is stored in my database*/}
+            {JSON.stringify(data, null, 2)}
+          </pre>
+        </code>
+      </main>
     </>
   );
 }
