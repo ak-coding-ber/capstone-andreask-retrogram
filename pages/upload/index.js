@@ -26,6 +26,9 @@ export async function getServerSideProps(context) {
 export default function UploadPage() {
   const [imageSrc, setImageSrc] = useState();
   const [uploadData, setUploadData] = useState();
+  const [description, setDescription] = useState();
+  const [retroUrl, setRetroUrl] = useState();
+  const [isGenerating, setIsGenerating] = useState(false);
 
   function handleOnChange(changeEvent) {
     const reader = new FileReader();
@@ -112,6 +115,15 @@ export default function UploadPage() {
     const data = Object.fromEntries(formData);
 
     console.log(data.prompt);
+
+    const response = await fetch("/api/openai-dalle2", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: description }),
+    });
+
+    const result = await response.json();
+    setRetroUrl(result.imageUrl);
   }
 
   return (
@@ -158,7 +170,7 @@ export default function UploadPage() {
         <h2>Pixel Image Generator</h2>
         <p>Pease describe briefly what can be seen in your Image.</p>
         <form
-          style={{ width: "80%", height: "4rem" }}
+          style={{ width: "80%", height: "10rem" }}
           onSubmit={handlClickGenerate}
         >
           <label htmlFor="prompt">Prompt</label>
@@ -167,6 +179,7 @@ export default function UploadPage() {
             id="prompt"
             name="prompt"
             maxLength={100}
+            onChange={(e) => setDescription(e.target.value)}
             style={{
               width: "100%",
               height: "6rem",
@@ -177,6 +190,19 @@ export default function UploadPage() {
           />
           <button type="submit">Generate</button>
         </form>
+        {retroUrl && (
+          <Image
+            width={512}
+            height={512}
+            src={retroUrl}
+            alt="Generated Image"
+            style={{
+              maxWidth: "100%",
+              height: "auto",
+              margin: "0 auto",
+            }}
+          ></Image>
+        )}
       </main>
     </>
   );
