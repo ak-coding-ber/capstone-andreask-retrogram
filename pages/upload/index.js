@@ -108,7 +108,7 @@ export default function UploadPage() {
     }
   }
 
-  async function handlClickGenerate(e) {
+  async function handleClickGenerate(e) {
     e.preventDefault();
 
     const formData = new FormData(e.target);
@@ -124,6 +124,20 @@ export default function UploadPage() {
 
     const result = await response.json();
     setRetroUrl(result.imageUrl);
+  }
+
+  async function handleClickUpload(e) {
+    const responseRetro = await fetch("/api/cloudinary/upload-from-link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ retroUrl }),
+    });
+
+    const responseLocal = await fetch("/api/cloudinary/upload-from-local", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ imageSrc }),
+    });
   }
 
   return (
@@ -171,7 +185,7 @@ export default function UploadPage() {
         <p>Pease describe briefly what can be seen in your Image.</p>
         <form
           style={{ width: "80%", height: "10rem" }}
-          onSubmit={handlClickGenerate}
+          onSubmit={handleClickGenerate}
         >
           <label htmlFor="prompt">Prompt</label>
           <textarea
@@ -202,6 +216,12 @@ export default function UploadPage() {
               margin: "0 auto",
             }}
           ></Image>
+        )}
+
+        {retroUrl && (
+          <p>
+            <button onClick={handleClickUpload}>Upload generated File</button>
+          </p>
         )}
       </main>
     </>
