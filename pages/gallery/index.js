@@ -2,6 +2,7 @@ import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton"
 import { getSession } from "next-auth/react";
 import useSWR from "swr";
 import Image from "next/image";
+import { uid } from "uid";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -25,26 +26,29 @@ export async function getServerSideProps(context) {
 export default function GalleryPage() {
   const { data } = useSWR("/api/fotos", { fallbackData: [] });
 
-  console.log(data);
-
   return (
     <>
       <h1>This will be the gallery page!</h1> <LoginLogoutButton />
       <br />
       <br />
       <main>
-        {data.length &&
-          data.map((foto) => {
-            return (
-              <Image
-                key={foto.id}
-                width={200}
-                height={200}
-                src={foto.imageUrl}
-                alt="gallery image"
-              ></Image>
-            );
-          })}
+        <ul>
+          {data.length &&
+            data.map((foto, index) => {
+              return (
+                <li key={uid()} style={{ listStyle: "none" }}>
+                  <Image
+                    priority={index === 0}
+                    width={200}
+                    height={200}
+                    src={foto.imageUrl}
+                    alt="gallery image"
+                  ></Image>
+                </li>
+              );
+            })}
+        </ul>
+
         <code
           style={{
             display: "block",
