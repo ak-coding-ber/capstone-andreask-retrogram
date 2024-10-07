@@ -1,8 +1,8 @@
+import FotoList from "@/components/FotoList/FotoList";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession } from "next-auth/react";
 import useSWR from "swr";
-import Image from "next/image";
-import { uid } from "uid";
+import { useState } from "react";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -24,7 +24,12 @@ export async function getServerSideProps(context) {
 }
 
 export default function GalleryPage() {
+  const [retroMode, setRetroMode] = useState(false);
   const { data } = useSWR("/api/fotos", { fallbackData: [] });
+
+  function handleRetroClick() {
+    setRetroMode(!retroMode);
+  }
 
   return (
     <>
@@ -32,44 +37,31 @@ export default function GalleryPage() {
       <br />
       <br />
       <main>
-        <ul>
-          {data.length &&
-            data.map((foto, index) => {
-              return (
-                <li key={uid()} style={{ listStyle: "none" }}>
-                  <Image
-                    priority={index === 0}
-                    width={200}
-                    height={200}
-                    src={foto.imageUrl}
-                    alt="gallery image"
-                  ></Image>
-                </li>
-              );
-            })}
-        </ul>
-
+        {data.length && <FotoList data={data} retroMode={retroMode} />}
         <code
           style={{
             display: "block",
             width: "100%",
-            height: "30rem",
+            height: "15rem",
             overflow: "auto",
           }}
         >
           <pre
             style={{
               width: "100%",
-              height: "20rem",
+              height: "10rem",
               whiteSpace: "pre-wrap",
               wordWrap: "break-word",
               overflow: "auto",
             }}
           >
             {/* just temporary to see directly how the data is stored in my database*/}
-            {JSON.stringify(data, null, 2)}
+            {JSON.stringify(data[0], null, 2)}
           </pre>
         </code>
+        <button onClick={handleRetroClick}>
+          {retroMode ? "NORMAL MODE" : "RETRO MODE"}
+        </button>
       </main>
     </>
   );
