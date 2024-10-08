@@ -19,20 +19,5 @@ export default createGlobalStyle`
     background-color: var(--background-color);
     color: white;
   }
-
-  main {
-  width: 100%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  }
-
-  @media (min-width: 768px) {
-  main {
-    width: 50%;
-  }
 }
 `;
