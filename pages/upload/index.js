@@ -100,14 +100,11 @@ export default function UploadPage() {
 
   return (
     <>
-      <h1>This will be the foto upload page!</h1>
-      <LoginLogoutButton />
-
       <Layout>
+        <h1>This will be the foto upload page!</h1>
+        <LoginLogoutButton />
         <h1>Image Uploader</h1>
-
         <p>Upload your original Image</p>
-
         <form method="post" onChange={handleOnChange}>
           <p>
             <input type="file" name="file" />
@@ -158,7 +155,6 @@ export default function UploadPage() {
             }}
           ></Image>
         )}
-
         {retroUrl && (
           <p>
             <button onClick={handleClickUpload}>Upload both Images</button>

@@ -26,24 +26,29 @@ export async function getServerSideProps(context) {
 
 export default function GalleryPage() {
   const [retroMode, setRetroMode] = useState(false);
-  const { data } = useSWR("/api/fotos", { fallbackData: [] });
+  const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
   }
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <>
-      <h1>This will be the gallery page!</h1> <LoginLogoutButton />
-      <br />
-      <br />
       <Layout>
+        <h1>This will be the gallery page!</h1>
+        <LoginLogoutButton />
+        <br />
+        <br />
         {data.length && <FotoList data={data} retroMode={retroMode} />}
         <code
           style={{
             display: "block",
             width: "100%",
-            height: "15rem",
+            height: "12rem",
             overflow: "auto",
           }}
         >
