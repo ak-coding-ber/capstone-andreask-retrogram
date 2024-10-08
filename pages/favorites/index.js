@@ -27,9 +27,13 @@ export async function getServerSideProps(context) {
 export default function FavoritesPage() {
   const [retroMode, setRetroMode] = useState(false);
   const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
-  //   const { data: favoritesData } = useSWR("/api/favorites", {
-  //     fallbackData: [],
-  //   });
+
+  async function getFavoritesData() {
+    const favoritesData = await fetch(
+      `/api/favorites?userId=6703b3441eb35855b6dc75b5`
+    );
+    console.log(await favoritesData.json());
+  }
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
@@ -37,10 +41,6 @@ export default function FavoritesPage() {
 
   if (isLoading) {
     return null;
-  }
-
-  if (favoritesData) {
-    console.log(favoritesData);
   }
 
   return (
@@ -79,6 +79,8 @@ export default function FavoritesPage() {
         <button onClick={handleRetroClick}>
           {retroMode ? "NORMAL MODE" : "RETRO MODE"}
         </button>
+        <br />
+        <button onClick={getFavoritesData}>Test Favorites Data Fetch</button>
       </Layout>
     </>
   );

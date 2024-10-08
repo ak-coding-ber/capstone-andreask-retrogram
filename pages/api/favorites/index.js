@@ -1,12 +1,15 @@
 import UserFavorites from "@/db/models/UserFavorites";
 import dbConnect from "@/db/connect";
+import mongoose from "mongoose";
 
 export default async function handler(request, response) {
   try {
     await dbConnect();
     try {
       if (request.method === "GET") {
-        const { userId } = request.query; // taking the user id from the request body
+        const { userId } = request.query; // taking the user id from the request url
+
+        console.log("Received userId:", userId);
 
         if (!userId) {
           return response
@@ -14,9 +17,11 @@ export default async function handler(request, response) {
             .json({ message: "No user ID was provided." });
         }
 
-        const userFavorites = await UserFavorites.findById(userId).populate(
-          "imageIds"
-        );
+        const userFavorites = await UserFavorites.find({ userId })
+          .populate("imageIds")
+          .exec();
+
+        console.log("userFavorites:", userFavorites);
 
         if (!userFavorites) {
           return response
