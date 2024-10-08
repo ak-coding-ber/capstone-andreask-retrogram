@@ -53,7 +53,7 @@ export default function Navigation() {
           Upload
         </NavLink>
         <NavLink
-          href={"/upload"}
+          href={"/favorites"}
           className="link"
           //   $isActive={currentPage === "/favorites" ? true : false}
         >
