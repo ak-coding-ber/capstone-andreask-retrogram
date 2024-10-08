@@ -1,8 +1,8 @@
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession } from "next-auth/react";
 import { useState } from "react";
-import Head from "next/head";
 import Image from "next/image";
+import Layout from "@/components/Layout/Layout";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -102,13 +102,8 @@ export default function UploadPage() {
     <>
       <h1>This will be the foto upload page!</h1>
       <LoginLogoutButton />
-      <Head>
-        <title>Image Uploader</title>
-        <meta name="description" content="Upload your image to Cloudinary!" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
 
-      <main>
+      <Layout>
         <h1>Image Uploader</h1>
 
         <p>Upload your original Image</p>
@@ -169,7 +164,7 @@ export default function UploadPage() {
             <button onClick={handleClickUpload}>Upload both Images</button>
           </p>
         )}
-      </main>
+      </Layout>
     </>
   );
 }

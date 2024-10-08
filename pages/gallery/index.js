@@ -1,4 +1,5 @@
 import FotoList from "@/components/FotoList/FotoList";
+import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession } from "next-auth/react";
 import useSWR from "swr";
@@ -36,7 +37,7 @@ export default function GalleryPage() {
       <h1>This will be the gallery page!</h1> <LoginLogoutButton />
       <br />
       <br />
-      <main>
+      <Layout>
         {data.length && <FotoList data={data} retroMode={retroMode} />}
         <code
           style={{
@@ -62,7 +63,7 @@ export default function GalleryPage() {
         <button onClick={handleRetroClick}>
           {retroMode ? "NORMAL MODE" : "RETRO MODE"}
         </button>
-      </main>
+      </Layout>
     </>
   );
 }

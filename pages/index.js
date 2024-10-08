@@ -3,6 +3,7 @@ import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton"
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import { useEffect } from "react";
+import Layout from "@/components/Layout/Layout";
 
 export default function HomePage() {
   const router = useRouter();
@@ -21,13 +22,13 @@ export default function HomePage() {
   }
 
   return (
-    <main>
+    <Layout>
       <h1>RETROGRAM</h1>
       {/* <Form /> */}
       {/* {session && <p>Signed in as {session.user.email}.</p>}
       {!session && <p>Not signed in</p>} */}
       <h2>Please sign in with Github or Google</h2>
       <LoginLogoutButton />
-    </main>
+    </Layout>
   );
 }
