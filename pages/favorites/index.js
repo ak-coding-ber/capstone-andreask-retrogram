@@ -1,15 +1,14 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { getSession } from "next-auth/react";
-import useSWR from "swr";
-import { useState } from "react";
+import { getSession, useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
+  const sessionData = await getSession(context);
 
-  // If no session, redirect to homepage
-  if (!session) {
+  // If no sessionData, redirect to homepage
+  if (!sessionData) {
     return {
       redirect: {
         destination: "/",
@@ -20,26 +19,42 @@ export async function getServerSideProps(context) {
 
   // Continue with page rendering if authenticated
   return {
-    props: { session },
+    props: { sessionData },
   };
 }
 
 export default function FavoritesPage() {
-  const [retroMode, setRetroMode] = useState(false);
-  const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
+  const [retroMode, setRetroMode] = useState();
+  const { data: sessionData } = useSession();
+  const [favorites, setFavorites] = useState([]);
+  const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
 
-  async function getFavoritesData() {
-    const favoritesData = await fetch(
-      `/api/favorites?userId=6703b3441eb35855b6dc75b5`
-    );
-    console.log(await favoritesData.json());
+  useEffect(() => {
+    if (sessionData?.user) {
+      setIsLoadingFavorites(true);
+      getFavoritesData(sessionData.user.userId); // Fetch favorites when sessionData is authenticated
+    }
+  }, [sessionData]);
+
+  async function getFavoritesData(userId) {
+    try {
+      const response = await fetch(`/api/favorites?userId=${userId}`);
+      const data = await response.json();
+
+      if (data[0].imageIds && data[0].imageIds.length > 0) {
+        setFavorites(data[0].imageIds);
+        setIsLoadingFavorites(false);
+      }
+    } catch (error) {
+      console.error("Error fetching favorites:", error);
+    }
   }
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
   }
 
-  if (isLoading) {
+  if (isLoadingFavorites) {
     return null;
   }
 
@@ -50,9 +65,8 @@ export default function FavoritesPage() {
         <LoginLogoutButton />
         <br />
         <br />
-        {/* just for now is use [data[2]] to have a dinstinct view on the favorites page*/}
-        {data.length && (
-          <FotoList data={[data[2], data[3]]} retroMode={retroMode} />
+        {favorites.length && (
+          <FotoList data={favorites} retroMode={retroMode} />
         )}
 
         <code
@@ -73,14 +87,12 @@ export default function FavoritesPage() {
             }}
           >
             {/* just temporary to see directly how the data is stored in my database*/}
-            {JSON.stringify(data[3], null, 2)}
+            {JSON.stringify(favorites, null, 2)}
           </pre>
         </code>
         <button onClick={handleRetroClick}>
           {retroMode ? "NORMAL MODE" : "RETRO MODE"}
         </button>
-        <br />
-        <button onClick={getFavoritesData}>Test Favorites Data Fetch</button>
       </Layout>
     </>
   );
