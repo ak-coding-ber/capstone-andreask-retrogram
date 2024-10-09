@@ -1,6 +1,6 @@
 import Image from "next/image";
 import styled from "styled-components";
-import { uid } from "uid";
+import { useFavorites } from "@/context/FavoritesContext";
 
 const StyledList = styled.ul`
   padding: 0;
@@ -25,15 +25,26 @@ const StyledList = styled.ul`
 const StyledListItem = styled.li`
   width: 200px;
   height: 200px;
+  position: relative;
 `;
 
-export default function FotoList({ data, retroMode }) {
+const LikeButton = styled.button`
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background-color: black;
+  border: white solid 1px;
+`;
+
+export default function FotoList({ data, retroMode, onLikeClick, isLiked }) {
+  const { favorites } = useFavorites(); // Access favorites from Context
+  console.log("favorites inside FotoList component", favorites);
   return (
     <StyledList>
       {data.length &&
         data.map((foto, index) => {
           return (
-            <StyledListItem key={uid()}>
+            <StyledListItem key={foto._id}>
               <Image
                 priority={index === 0}
                 width={200}
@@ -44,6 +55,14 @@ export default function FotoList({ data, retroMode }) {
                   objectFit: "cover",
                 }}
               ></Image>
+              <LikeButton onClick={() => onLikeClick(foto._id)}>
+                <Image
+                  src={isLiked ? "/icons/heart-filled.png" : "/icons/heart.png"}
+                  width={20}
+                  height={20}
+                  alt="like-button"
+                ></Image>
+              </LikeButton>
             </StyledListItem>
           );
         })}

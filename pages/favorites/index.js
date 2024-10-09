@@ -1,8 +1,9 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { getSession, useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { getSession } from "next-auth/react";
+import { useState } from "react";
+import { useFavorites } from "@/context/FavoritesContext";
 
 export async function getServerSideProps(context) {
   const sessionData = await getSession(context);
@@ -25,48 +26,33 @@ export async function getServerSideProps(context) {
 
 export default function FavoritesPage() {
   const [retroMode, setRetroMode] = useState();
-  const { data: sessionData } = useSession();
-  const [favorites, setFavorites] = useState([]);
-  const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
-
-  useEffect(() => {
-    if (sessionData?.user) {
-      setIsLoadingFavorites(true);
-      getFavoritesData(sessionData.user.userId); // Fetch favorites when sessionData is authenticated
-    }
-  }, [sessionData]);
-
-  async function getFavoritesData(userId) {
-    try {
-      const response = await fetch(`/api/favorites?userId=${userId}`);
-      const data = await response.json();
-
-      if (data[0].imageIds && data[0].imageIds.length > 0) {
-        setFavorites(data[0].imageIds);
-        setIsLoadingFavorites(false);
-      }
-    } catch (error) {
-      console.error("Error fetching favorites:", error);
-    }
-  }
+  // const [favorites, setFavorites] = useState([]);
+  const { favorites } = useFavorites();
+  // const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
   }
 
-  if (isLoadingFavorites) {
-    return null;
+  function handleLikeClick() {
+    console.log("isLiked like was clicked inside Favorites Page");
   }
+
+  console.log("favorites inside favorites page", favorites);
 
   return (
     <>
       <Layout>
-        <h1>This will be the favorties page!</h1>
+        <h1>This will be the favorites page!</h1>
         <LoginLogoutButton />
         <br />
         <br />
         {favorites.length && (
-          <FotoList data={favorites} retroMode={retroMode} />
+          <FotoList
+            retroMode={retroMode}
+            onLikeClick={handleLikeClick}
+            data={favorites}
+          />
         )}
 
         <code

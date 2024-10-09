@@ -1,6 +1,5 @@
 import UserFavorites from "@/db/models/UserFavorites";
 import dbConnect from "@/db/connect";
-import mongoose from "mongoose";
 
 export default async function handler(request, response) {
   try {
