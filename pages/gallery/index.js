@@ -1,7 +1,7 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { getSession, useSession } from "next-auth/react";
+import { getSession } from "next-auth/react";
 import useSWR from "swr";
 import { useState, useEffect } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
@@ -28,46 +28,25 @@ export async function getServerSideProps(context) {
 export default function GalleryPage() {
   const [retroMode, setRetroMode] = useState(false);
   const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
-  const [isLiked, setIsLiked] = useState(false);
-  const { data: sessionData } = useSession();
   const { favorites } = useFavorites();
-  const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
-
-  // useEffect(() => {
-  //   if (sessionData?.user) {
-  //     setIsLoadingFavorites(true);
-  //     getFavoritesData(sessionData.user.userId); // Fetch favorites when sessionData is authenticated
-  //   }
-  // }, [sessionData]);
-
-  // async function getFavoritesData(userId) {
-  //   try {
-  //     const response = await fetch(`/api/favorites?userId=${userId}`);
-  //     const data = await response.json();
-
-  //     if (data[0].imageIds && data[0].imageIds.length > 0) {
-  //       setFavorites(data[0].imageIds);
-  //       setIsLoadingFavorites(false);
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching favorites:", error);
-  //   }
-  // }
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
   }
 
   function handleLikeClick(fotoId) {
-    setIsLiked(!isLiked);
-    console.log(`isLiked is set to ${!isLiked} for foto ${fotoId}`);
+    // console.log(`isLiked is set to ${!isLiked} for foto ${fotoId}`);
   }
+
+  // useEffect(() => {
+  //   if (favorites.length) {
+  //     // console.log("favorites inside gallery page", favorites);
+  //   }
+  // }, [favorites]);
 
   if (isLoading) {
     return null;
   }
-
-  console.log("favorites inside gallery page", favorites);
 
   return (
     <>
@@ -81,7 +60,7 @@ export default function GalleryPage() {
             data={data}
             retroMode={retroMode}
             onLikeClick={handleLikeClick}
-            isLiked={isLiked}
+            favorites={favorites}
           />
         )}
         <code

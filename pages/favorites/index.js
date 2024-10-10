@@ -26,9 +26,7 @@ export async function getServerSideProps(context) {
 
 export default function FavoritesPage() {
   const [retroMode, setRetroMode] = useState();
-  // const [favorites, setFavorites] = useState([]);
   const { favorites } = useFavorites();
-  // const [isLoadingFavorites, setIsLoadingFavorites] = useState(true);
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
@@ -52,6 +50,7 @@ export default function FavoritesPage() {
             retroMode={retroMode}
             onLikeClick={handleLikeClick}
             data={favorites}
+            favorites={favorites}
           />
         )}
 

@@ -1,6 +1,5 @@
 import Image from "next/image";
 import styled from "styled-components";
-import { useFavorites } from "@/context/FavoritesContext";
 
 const StyledList = styled.ul`
   padding: 0;
@@ -36,13 +35,18 @@ const LikeButton = styled.button`
   border: white solid 1px;
 `;
 
-export default function FotoList({ data, retroMode, onLikeClick, isLiked }) {
-  const { favorites } = useFavorites(); // Access favorites from Context
-  console.log("favorites inside FotoList component", favorites);
+export default function FotoList({ data, retroMode, onLikeClick, favorites }) {
+  // console.log("favorites inside FotoList component", favorites);
+
+  // console.log(data[0]);
   return (
     <StyledList>
       {data.length &&
         data.map((foto, index) => {
+          //checks if the rendered image is in the users favorites
+          const isLiked = favorites.some(
+            (favorite) => favorite._id === foto._id
+          );
           return (
             <StyledListItem key={foto._id}>
               <Image
