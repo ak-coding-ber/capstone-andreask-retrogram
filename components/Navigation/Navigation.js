@@ -3,6 +3,7 @@ import styled from "styled-components";
 const StyledLayout = styled.div`
   display: flex;
   position: fixed;
+  z-index: 1;
   width: 100%;
   height: 100px;
   top: 0;
@@ -53,7 +54,7 @@ export default function Navigation() {
           Upload
         </NavLink>
         <NavLink
-          href={"/upload"}
+          href={"/favorites"}
           className="link"
           //   $isActive={currentPage === "/favorites" ? true : false}
         >

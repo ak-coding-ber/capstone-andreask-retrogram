@@ -1,6 +1,7 @@
 import GlobalStyle from "../styles";
 import { SessionProvider } from "next-auth/react";
 import { SWRConfig } from "swr";
+import { FavoritesProvider } from "@/context/FavoritesContext";
 
 export default function App({
   Component,
@@ -21,7 +22,9 @@ export default function App({
       >
         <SessionProvider session={session}>
           <GlobalStyle />
-          <Component {...pageProps} />
+          <FavoritesProvider>
+            <Component {...pageProps} />
+          </FavoritesProvider>
         </SessionProvider>
       </SWRConfig>
     </>

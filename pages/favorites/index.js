@@ -2,15 +2,14 @@ import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession, useSession } from "next-auth/react";
-import useSWR from "swr";
 import { useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
 
 export async function getServerSideProps(context) {
-  const session = await getSession(context);
+  const sessionData = await getSession(context);
 
-  // If no session, redirect to homepage
-  if (!session) {
+  // If no sessionData, redirect to homepage
+  if (!sessionData) {
     return {
       redirect: {
         destination: "/",
@@ -21,13 +20,12 @@ export async function getServerSideProps(context) {
 
   // Continue with page rendering if authenticated
   return {
-    props: { session },
+    props: { sessionData },
   };
 }
 
-export default function GalleryPage() {
-  const [retroMode, setRetroMode] = useState(false);
-  const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
+export default function FavoritesPage() {
+  const [retroMode, setRetroMode] = useState();
   const { favorites, setFavorites } = useFavorites();
   const { data: sessionData } = useSession();
 
@@ -59,35 +57,27 @@ export default function GalleryPage() {
 
       const result = await response.json();
       console.log("API Response:", result);
-
-      // // Refetch the favorites to ensure the updated data is loaded
-      // const updatedFavorites = await fetch(`/api/favorites?userId=${userId}`);
-      // const updatedData = await updatedFavorites.json();
-      // setFavorites(updatedData);
     } catch (error) {
       console.error("Error updating favorites:", error);
     }
   }
 
-  if (isLoading) {
-    return null;
-  }
-
   return (
     <>
       <Layout>
-        <h1>This will be the gallery page!</h1>
+        <h1>This will be the favorites page!</h1>
         <LoginLogoutButton />
         <br />
         <br />
-        {data.length && (
+        {favorites.length && (
           <FotoList
-            data={data}
             retroMode={retroMode}
             onLikeClick={handleLikeClick}
+            data={favorites}
             favorites={favorites}
           />
         )}
+
         <code
           style={{
             display: "block",
@@ -106,7 +96,7 @@ export default function GalleryPage() {
             }}
           >
             {/* just temporary to see directly how the data is stored in my database*/}
-            {JSON.stringify(data[0], null, 2)}
+            {JSON.stringify(favorites, null, 2)}
           </pre>
         </code>
         <button onClick={handleRetroClick}>
