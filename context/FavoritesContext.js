@@ -12,7 +12,7 @@ export const FavoritesProvider = ({ children }) => {
     if (sessionData?.user && !hasFetched) {
       getFavoritesData(sessionData.user.userId); // Fetch favorites when user is authenticated
     }
-  }, [sessionData?.user, hasFetched, favorites.length]);
+  }, [sessionData?.user, hasFetched]);
 
   async function getFavoritesData(userId) {
     try {
@@ -20,7 +20,6 @@ export const FavoritesProvider = ({ children }) => {
       const data = await response.json();
 
       if (data[0].imageIds && data[0].imageIds.length > 0) {
-        console.log("Fetched favorites:", data[0].imageIds);
         setFavorites(data[0].imageIds);
         setHasFetched(true);
       }

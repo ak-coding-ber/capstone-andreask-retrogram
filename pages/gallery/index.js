@@ -1,9 +1,9 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import useSWR from "swr";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
 
 export async function getServerSideProps(context) {
@@ -28,21 +28,46 @@ export async function getServerSideProps(context) {
 export default function GalleryPage() {
   const [retroMode, setRetroMode] = useState(false);
   const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
-  const { favorites } = useFavorites();
+  const { favorites, setFavorites } = useFavorites();
+  const { data: sessionData } = useSession();
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
   }
 
-  function handleLikeClick(fotoId) {
-    // console.log(`isLiked is set to ${!isLiked} for foto ${fotoId}`);
-  }
+  async function handleLikeClick(foto, isLiked) {
+    if (isLiked) {
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((favorite) => favorite._id !== foto._id)
+      );
+    } else {
+      setFavorites((prevFavorites) => [...prevFavorites, foto]);
+    }
 
-  // useEffect(() => {
-  //   if (favorites.length) {
-  //     // console.log("favorites inside gallery page", favorites);
-  //   }
-  // }, [favorites]);
+    try {
+      const response = await fetch("/api/favorites", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: sessionData.user.userId,
+          fotoId: foto._id,
+          isLiked,
+        }),
+      });
+
+      const result = await response.json();
+      console.log("API Response:", result);
+
+      // // Refetch the favorites to ensure the updated data is loaded
+      // const updatedFavorites = await fetch(`/api/favorites?userId=${userId}`);
+      // const updatedData = await updatedFavorites.json();
+      // setFavorites(updatedData);
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+    }
+  }
 
   if (isLoading) {
     return null;

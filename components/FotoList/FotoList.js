@@ -59,7 +59,7 @@ export default function FotoList({ data, retroMode, onLikeClick, favorites }) {
                   objectFit: "cover",
                 }}
               ></Image>
-              <LikeButton onClick={() => onLikeClick(foto._id)}>
+              <LikeButton onClick={() => onLikeClick(foto, isLiked)}>
                 <Image
                   src={isLiked ? "/icons/heart-filled.png" : "/icons/heart.png"}
                   width={20}

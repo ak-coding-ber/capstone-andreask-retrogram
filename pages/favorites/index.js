@@ -36,8 +36,6 @@ export default function FavoritesPage() {
     console.log("isLiked like was clicked inside Favorites Page");
   }
 
-  console.log("favorites inside favorites page", favorites);
-
   return (
     <>
       <Layout>
