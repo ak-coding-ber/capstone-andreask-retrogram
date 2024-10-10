@@ -6,13 +6,13 @@ const FavoritesContext = createContext();
 export const FavoritesProvider = ({ children }) => {
   const [favorites, setFavorites] = useState([]);
   const { data: sessionData } = useSession();
+  const [hasFetched, setHasFetched] = useState(false);
 
   useEffect(() => {
-    if (sessionData?.user) {
-      // setIsLoadingFavorites(true);
-      getFavoritesData(sessionData.user.userId); // Fetch favorites when sessionData is authenticated
+    if (sessionData?.user && !hasFetched) {
+      getFavoritesData(sessionData.user.userId); // Fetch favorites when user is authenticated
     }
-  }, [sessionData]);
+  }, [sessionData?.user, hasFetched, favorites.length]);
 
   async function getFavoritesData(userId) {
     try {
@@ -22,7 +22,7 @@ export const FavoritesProvider = ({ children }) => {
       if (data[0].imageIds && data[0].imageIds.length > 0) {
         console.log("Fetched favorites:", data[0].imageIds);
         setFavorites(data[0].imageIds);
-        // setIsLoadingFavorites(false);
+        setHasFetched(true);
       }
     } catch (error) {
       console.error("Error fetching favorites:", error);
