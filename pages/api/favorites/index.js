@@ -40,7 +40,7 @@ export default async function handler(request, response) {
             : { $push: { imageIds: new ObjectId(fotoId) } }; // add fotoId to userFavorites imageIds
 
           // Update in MongoDB
-          const updateResult = await UserFavorites.updateOne(
+          await UserFavorites.updateOne(
             { userId: String(userId) },
             updateOperation
           );

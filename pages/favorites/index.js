@@ -1,7 +1,7 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
 
@@ -26,14 +26,40 @@ export async function getServerSideProps(context) {
 
 export default function FavoritesPage() {
   const [retroMode, setRetroMode] = useState();
-  const { favorites } = useFavorites();
+  const { favorites, setFavorites } = useFavorites();
+  const { data: sessionData } = useSession();
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
   }
 
-  function handleLikeClick() {
-    console.log("isLiked like was clicked inside Favorites Page");
+  async function handleLikeClick(foto, isLiked) {
+    if (isLiked) {
+      setFavorites((prevFavorites) =>
+        prevFavorites.filter((favorite) => favorite._id !== foto._id)
+      );
+    } else {
+      setFavorites((prevFavorites) => [...prevFavorites, foto]);
+    }
+
+    try {
+      const response = await fetch("/api/favorites", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: sessionData.user.userId,
+          fotoId: foto._id,
+          isLiked,
+        }),
+      });
+
+      const result = await response.json();
+      console.log("API Response:", result);
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+    }
   }
 
   return (
