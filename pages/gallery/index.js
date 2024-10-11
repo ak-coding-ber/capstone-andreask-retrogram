@@ -5,6 +5,7 @@ import { getSession, useSession } from "next-auth/react";
 import useSWR from "swr";
 import { useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -30,9 +31,15 @@ export default function GalleryPage() {
   const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
   const { favorites, setFavorites } = useFavorites();
   const { data: sessionData } = useSession();
+  const router = useRouter();
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
+  }
+
+  function handleImageClick(id) {
+    console.log("Clicked Image:", id);
+    router.push(`/gallery/${id}`);
   }
 
   async function handleLikeClick(foto, isLiked) {
@@ -86,6 +93,7 @@ export default function GalleryPage() {
             retroMode={retroMode}
             onLikeClick={handleLikeClick}
             favorites={favorites}
+            onImageClick={handleImageClick}
           />
         )}
         <code
