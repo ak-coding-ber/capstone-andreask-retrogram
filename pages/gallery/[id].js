@@ -2,6 +2,7 @@ import Image from "next/image";
 import useSWR from "swr";
 import Layout from "@/components/Layout/Layout";
 import LikeButton from "@/components/Buttons/LikeButton/LikeButton";
+import Comments from "@/components/Comments/Comments";
 import ImageContainer from "@/components/ImageContainer/ImageContainer";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession, useSession } from "next-auth/react";
@@ -99,16 +100,18 @@ export default function FotoDetailsPage() {
         <LoginLogoutButton />
         <br />
         <br />
-        <ImageContainer $size={500}>
+        <ImageContainer $size={300}>
           <Image
-            width={500}
-            height={500}
+            width={300}
+            height={300}
             src={retroMode ? foto.retroImageUrl : foto.imageUrl}
             alt="gallery image"
             style={{
               objectFit: "cover",
-              maxWidth: "100vw",
-              maxHeight: "auto",
+              width: "100%",
+              height: "100%",
+              maxWidth: "100%",
+              objectFit: "cover",
             }}
           ></Image>
           <LikeButton
@@ -117,6 +120,7 @@ export default function FotoDetailsPage() {
             isLiked={isLiked}
           ></LikeButton>
         </ImageContainer>
+        <Comments />
       </Layout>
     </>
   );
