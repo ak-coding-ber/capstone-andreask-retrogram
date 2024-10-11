@@ -24,7 +24,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function FavoritesPage() {
+export default function FavoritesPage({ onImageClick }) {
   const [retroMode, setRetroMode] = useState();
   const { favorites, setFavorites } = useFavorites();
   const { data: sessionData } = useSession();
@@ -75,6 +75,7 @@ export default function FavoritesPage() {
             onLikeClick={handleLikeClick}
             data={favorites}
             favorites={favorites}
+            onImageClick={onImageClick}
           />
         )}
 

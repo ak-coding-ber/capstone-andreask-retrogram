@@ -1,9 +1,11 @@
 import Image from "next/image";
 import useSWR from "swr";
 import Layout from "@/components/Layout/Layout";
+import LikeButton from "@/components/Buttons/LikeButton/LikeButton";
+import ImageContainer from "@/components/ImageContainer/ImageContainer";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useRouter } from "next/router";
 
@@ -33,6 +35,7 @@ export default function FotoDetailsPage() {
   const router = useRouter();
   const { id } = router.query;
   const { isReady } = router;
+  const [isLiked, setIsLiked] = useState(false);
 
   const {
     data: foto,
@@ -41,6 +44,13 @@ export default function FotoDetailsPage() {
     mutate,
   } = useSWR(id ? `/api/fotos/${id}` : null);
 
+  useEffect(() => {
+    if (foto && favorites.length > 0) {
+      const liked = favorites.some((favorite) => favorite._id === foto._id);
+      setIsLiked(liked);
+    }
+  }, [foto, favorites]);
+
   if (!isReady || isLoading || error || !foto) return <h2>Loading...</h2>;
 
   // function handleRetroClick() {
@@ -48,6 +58,7 @@ export default function FotoDetailsPage() {
   // }
 
   async function handleLikeClick(foto, isLiked) {
+    setIsLiked(!isLiked);
     if (isLiked) {
       setFavorites((prevFavorites) =>
         prevFavorites.filter((favorite) => favorite._id !== foto._id)
@@ -70,6 +81,7 @@ export default function FotoDetailsPage() {
       });
 
       const result = await response.json();
+
       console.log("API Response:", result);
     } catch (error) {
       console.error("Error updating favorites:", error);
@@ -81,21 +93,30 @@ export default function FotoDetailsPage() {
   return (
     <>
       <Layout>
-        <h1 style={{ textAlign: "center" }}>
+        <p style={{ textAlign: "center" }}>
           This will be the details page for Image {`${id}`}
-        </h1>
+        </p>
         <LoginLogoutButton />
         <br />
         <br />
-        <Image
-          width={500}
-          height={500}
-          src={retroMode ? foto.retroImageUrl : foto.imageUrl}
-          alt="gallery image"
-          style={{
-            objectFit: "cover",
-          }}
-        ></Image>
+        <ImageContainer $size={500}>
+          <Image
+            width={500}
+            height={500}
+            src={retroMode ? foto.retroImageUrl : foto.imageUrl}
+            alt="gallery image"
+            style={{
+              objectFit: "cover",
+              maxWidth: "100vw",
+              maxHeight: "auto",
+            }}
+          ></Image>
+          <LikeButton
+            onLikeClick={handleLikeClick}
+            foto={foto}
+            isLiked={isLiked}
+          ></LikeButton>
+        </ImageContainer>
       </Layout>
     </>
   );
