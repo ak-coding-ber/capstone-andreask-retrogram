@@ -73,6 +73,43 @@ export default function FotoDetailsPage() {
   //   setRetroMode(!retroMode);
   // }
 
+  async function handleAddComment(e) {
+    e.preventDefault();
+    console.log("Button 'Add comment was clicked!'");
+
+    const formData = new FormData(e.target);
+    const commentData = Object.fromEntries(formData);
+
+    const newComment = {
+      fotoId: id,
+      userId: sessionData.user.userId,
+      comment: commentData.comment,
+      date: new Date().toISOString(),
+      username: commentData.name,
+    };
+
+    try {
+      const response = await fetch(`/api/fotos/${id}/comments`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newComment),
+      });
+
+      if (response.ok) {
+        mutateComments();
+      } else {
+        console.error(`Error: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Comment submitted:", result);
+    } catch (error) {
+      console.error("Error when sending post request.", error);
+    }
+  }
+
   async function handleLikeClick(foto, isLiked) {
     setIsLiked(!isLiked);
     if (isLiked) {
@@ -133,7 +170,7 @@ export default function FotoDetailsPage() {
             isLiked={isLiked}
           ></LikeButton>
         </ImageContainer>
-        <Comments comments={comments} />
+        <Comments comments={comments} onCommentAdd={handleAddComment} />
       </Layout>
     </>
   );

@@ -8,7 +8,6 @@ export default async function handler(request, response) {
   if (!id) {
     return;
   }
-  //   console.log("id", id);
 
   try {
     await dbConnect();
@@ -19,6 +18,16 @@ export default async function handler(request, response) {
         const comments = await Comment.find({ fotoId: objectId });
 
         return response.status(200).json(comments);
+      } else if (request.method === "POST") {
+        try {
+          const newComment = await Comment.create(request.body);
+          response
+            .status(201)
+            .json({ message: "Comment added successfully", newComment });
+        } catch (error) {
+          console.error("Comment could not be created in Backend.", error);
+          response.status(500).json({ error: "Failed to add comment" });
+        }
       }
     } catch (e) {
       console.log(e);

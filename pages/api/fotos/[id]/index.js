@@ -7,8 +7,6 @@ export default async function handler(request, response) {
   if (!id) {
     return;
   }
-  console.log("id", id);
-
   try {
     await dbConnect();
     try {

@@ -1,5 +1,28 @@
 import styled from "styled-components";
 
+const FormContainer = styled.form`
+  display: grid;
+  gap: 0.5rem;
+`;
+
+const Input = styled.input`
+  padding: 0.5rem;
+  font-size: inherit;
+  border: 1px solid #344e41;
+  border-radius: 0.5rem;
+`;
+
+const Textarea = styled.textarea`
+  font-family: inherit;
+  border: 1px solid #344e41;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+`;
+
+const Label = styled.label`
+  font-weight: bold;
+`;
+
 const StyledArticle = styled.article`
   width: 100%;
   display: flex;
@@ -31,10 +54,18 @@ const StyledSpan = styled.span`
 `;
 
 //{ foto, comments, onSubmit }
-export default function Comments({ comments }) {
+export default function Comments({ comments, onCommentAdd }) {
   return (
     <>
       <h2>Comments</h2>
+      {/* <FormContainer onSubmit={onSubmit}> */}
+      <FormContainer onSubmit={onCommentAdd}>
+        <Label htmlFor="name">Your Name</Label>
+        <Input type="text" name="name" placeholder="name" />
+        <Label htmlFor="comment">Your Comment</Label>
+        <Input type="text" name="comment" placeholder="comment here..." />
+        <button type="submit">Send</button>
+      </FormContainer>
       <ul
         style={{
           width: "80%",
