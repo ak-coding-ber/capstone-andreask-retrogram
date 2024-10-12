@@ -4,12 +4,11 @@ const StyledArticle = styled.article`
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
   align-items: center;
   background-color: var(--secondary-color);
   border-radius: 0.8rem;
   padding: 0.5rem;
-  //   margin: 1rem;
+  margin-bottom: 10px;
   text-align: center;
   p {
     border-bottom: solid 1px black;
@@ -19,7 +18,7 @@ const StyledArticle = styled.article`
 
 const CommentContainer = styled.li`
   display: flex;
-  self-align: start;
+  flex-direction: column;
   background-color: white;
   color: black;
   border-radius: 0.5rem;
@@ -32,7 +31,7 @@ const StyledSpan = styled.span`
 `;
 
 //{ foto, comments, onSubmit }
-export default function Comments() {
+export default function Comments({ comments }) {
   return (
     <>
       <h2>Comments</h2>
@@ -48,14 +47,18 @@ export default function Comments() {
           maxWidth: "400px",
         }}
       >
-        <StyledArticle>
-          <CommentContainer>
-            <StyledSpan>This picture is amazing!</StyledSpan>
-          </CommentContainer>
-          <CommentContainer>
-            <StyledSpan>I love it!</StyledSpan>
-          </CommentContainer>
-        </StyledArticle>
+        {comments.length ? (
+          comments.map((comment) => (
+            <StyledArticle key={comment._id}>
+              <CommentContainer>
+                <StyledSpan>{comment.comment}</StyledSpan>
+                <p>Commented by: {comment.username}</p>
+              </CommentContainer>
+            </StyledArticle>
+          ))
+        ) : (
+          <p style={{ textAlign: "center" }}>No comments available yet</p>
+        )}
       </ul>
     </>
   );

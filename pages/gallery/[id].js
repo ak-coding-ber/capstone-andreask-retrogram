@@ -66,7 +66,8 @@ export default function FotoDetailsPage() {
     }
   }, [comments, error]);
 
-  if (!isReady || isLoading || error || !foto) return <h2>Loading...</h2>;
+  if (!isReady || isLoading || error || !foto || isLoadingComments)
+    return <h2>Loading...</h2>;
 
   // function handleRetroClick() {
   //   setRetroMode(!retroMode);
@@ -132,7 +133,7 @@ export default function FotoDetailsPage() {
             isLiked={isLiked}
           ></LikeButton>
         </ImageContainer>
-        <Comments />
+        <Comments comments={comments} />
       </Layout>
     </>
   );

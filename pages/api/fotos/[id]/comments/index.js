@@ -18,7 +18,6 @@ export default async function handler(request, response) {
         // finds all comments for a specific foto id
         const comments = await Comment.find({ fotoId: objectId });
 
-        console.log(comments);
         return response.status(200).json(comments);
       }
     } catch (e) {
