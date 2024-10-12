@@ -45,12 +45,26 @@ export default function FotoDetailsPage() {
     mutate,
   } = useSWR(id ? `/api/fotos/${id}` : null);
 
+  const {
+    data: comments,
+    isLoading: isLoadingComments,
+    error: errorComments,
+    mutate: mutateComments,
+  } = useSWR(`/api/fotos/${id}/comments`, { fallbackData: [] });
+
   useEffect(() => {
     if (foto && favorites.length > 0) {
       const liked = favorites.some((favorite) => favorite._id === foto._id);
       setIsLiked(liked);
     }
   }, [foto, favorites]);
+
+  useEffect(() => {
+    if (comments.length || error) {
+      console.log("comments", comments);
+      console.log("error", error);
+    }
+  }, [comments, error]);
 
   if (!isReady || isLoading || error || !foto) return <h2>Loading...</h2>;
 
@@ -83,13 +97,11 @@ export default function FotoDetailsPage() {
 
       const result = await response.json();
 
-      console.log("API Response:", result);
+      // console.log("API Response:", result);
     } catch (error) {
       console.error("Error updating favorites:", error);
     }
   }
-
-  console.log(foto);
 
   return (
     <>
