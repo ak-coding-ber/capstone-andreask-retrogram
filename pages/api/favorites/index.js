@@ -32,9 +32,6 @@ export default async function handler(request, response) {
         try {
           const { userId, fotoId, isLiked } = request.body;
 
-          console.log("Received userId:", userId);
-          console.log("Request Body:", request.body);
-
           const updateOperation = isLiked
             ? { $pull: { imageIds: new ObjectId(fotoId) } } // remove fotoId from userFavorites imageIds
             : { $push: { imageIds: new ObjectId(fotoId) } }; // add fotoId to userFavorites imageIds

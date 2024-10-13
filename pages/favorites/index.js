@@ -2,7 +2,6 @@ import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession, useSession } from "next-auth/react";
-import { useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
 
 export async function getServerSideProps(context) {
@@ -24,8 +23,11 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function FavoritesPage({ onImageClick }) {
-  const [retroMode, setRetroMode] = useState();
+export default function FavoritesPage({
+  onImageClick,
+  onRetroClick,
+  retroMode,
+}) {
   const { favorites, setFavorites } = useFavorites();
   const { data: sessionData } = useSession();
 
@@ -79,28 +81,7 @@ export default function FavoritesPage({ onImageClick }) {
           />
         )}
 
-        <code
-          style={{
-            display: "block",
-            width: "100%",
-            height: "12rem",
-            overflow: "auto",
-          }}
-        >
-          <pre
-            style={{
-              width: "100%",
-              height: "10rem",
-              whiteSpace: "pre-wrap",
-              wordWrap: "break-word",
-              overflow: "auto",
-            }}
-          >
-            {/* just temporary to see directly how the data is stored in my database*/}
-            {JSON.stringify(favorites, null, 2)}
-          </pre>
-        </code>
-        <button onClick={handleRetroClick}>
+        <button onClick={onRetroClick}>
           {retroMode ? "NORMAL MODE" : "RETRO MODE"}
         </button>
       </Layout>

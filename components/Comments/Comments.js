@@ -89,7 +89,7 @@ export default function Comments({
             <StyledArticle key={comment._id}>
               <CommentContainer>
                 <StyledSpan>{comment.comment}</StyledSpan>
-                <p>by: {currentUser}</p>
+                <p>by: {comment.username}</p>
               </CommentContainer>
               {comment.userId.trim() === currentUserId.trim() ? (
                 <button onClick={() => onClickDelete(comment._id)}>
