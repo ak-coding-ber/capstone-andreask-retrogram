@@ -5,6 +5,7 @@ import { getSession, useSession } from "next-auth/react";
 import useSWR from "swr";
 import { useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
+import { useRouter } from "next/router";
 
 export async function getServerSideProps(context) {
   const session = await getSession(context);
@@ -30,9 +31,14 @@ export default function GalleryPage() {
   const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
   const { favorites, setFavorites } = useFavorites();
   const { data: sessionData } = useSession();
+  const router = useRouter();
 
   function handleRetroClick() {
     setRetroMode(!retroMode);
+  }
+
+  function handleImageClick(id) {
+    router.push(`/gallery/${id}`);
   }
 
   async function handleLikeClick(foto, isLiked) {
@@ -56,14 +62,6 @@ export default function GalleryPage() {
           isLiked,
         }),
       });
-
-      const result = await response.json();
-      console.log("API Response:", result);
-
-      // // Refetch the favorites to ensure the updated data is loaded
-      // const updatedFavorites = await fetch(`/api/favorites?userId=${userId}`);
-      // const updatedData = await updatedFavorites.json();
-      // setFavorites(updatedData);
     } catch (error) {
       console.error("Error updating favorites:", error);
     }
@@ -86,6 +84,7 @@ export default function GalleryPage() {
             retroMode={retroMode}
             onLikeClick={handleLikeClick}
             favorites={favorites}
+            onImageClick={handleImageClick}
           />
         )}
         <code

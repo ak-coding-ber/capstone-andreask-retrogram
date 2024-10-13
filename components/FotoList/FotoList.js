@@ -35,7 +35,13 @@ const LikeButton = styled.button`
   border: white solid 1px;
 `;
 
-export default function FotoList({ data, retroMode, onLikeClick, favorites }) {
+export default function FotoList({
+  data,
+  retroMode,
+  onLikeClick,
+  favorites,
+  onImageClick,
+}) {
   // console.log("favorites inside FotoList component", favorites);
 
   // console.log(data[0]);
@@ -49,16 +55,28 @@ export default function FotoList({ data, retroMode, onLikeClick, favorites }) {
           );
           return (
             <StyledListItem key={foto._id}>
-              <Image
-                priority={index === 0}
-                width={200}
-                height={200}
-                src={retroMode ? foto.retroImageUrl : foto.imageUrl}
-                alt="gallery image"
+              <button
+                onClick={() => onImageClick(foto._id)}
                 style={{
-                  objectFit: "cover",
+                  width: "200px",
+                  height: "200px",
+                  margin: "0px",
+                  lineHeight: "0px",
+                  padding: "0px",
+                  border: "0px",
                 }}
-              ></Image>
+              >
+                <Image
+                  priority={index === 0}
+                  width={200}
+                  height={200}
+                  src={retroMode ? foto.retroImageUrl : foto.imageUrl}
+                  alt="gallery image"
+                  style={{
+                    objectFit: "cover",
+                  }}
+                ></Image>
+              </button>
               <LikeButton onClick={() => onLikeClick(foto, isLiked)}>
                 <Image
                   src={isLiked ? "/icons/heart-filled.png" : "/icons/heart.png"}

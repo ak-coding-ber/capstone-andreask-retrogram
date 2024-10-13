@@ -14,6 +14,7 @@ export default createGlobalStyle`
   }
 
   body {
+    width:100%;
     margin: 0;
     font-family: system-ui;
     background-color: var(--background-color);
