@@ -15,14 +15,18 @@ export default async function handler(request, response) {
             .json({ message: "No user ID was provided." });
         }
 
-        const userFavorites = await UserFavorites.find({ userId })
+        const userFavorites = await UserFavorites.findOne({ userId })
           .populate("imageIds")
           .exec();
 
         if (!userFavorites) {
-          return response
-            .status(404)
-            .json({ message: "No favorites found for this user" });
+          //if a new user logs in a new favorites collection is created in the db for that user
+          const userFavorites = await UserFavorites.create({
+            userId,
+            imageIds: [],
+          });
+
+          return response.status(200).json(userFavorites);
         }
 
         // return an array of all images that where liked
