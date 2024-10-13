@@ -3,6 +3,7 @@ import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession, useSession } from "next-auth/react";
 import { useFavorites } from "@/context/FavoritesContext";
+import useSWR from "swr";
 
 export async function getServerSideProps(context) {
   const sessionData = await getSession(context);
@@ -30,10 +31,6 @@ export default function FavoritesPage({
 }) {
   const { favorites, setFavorites } = useFavorites();
   const { data: sessionData } = useSession();
-
-  function handleRetroClick() {
-    setRetroMode(!retroMode);
-  }
 
   async function handleLikeClick(foto, isLiked) {
     if (isLiked) {

@@ -19,9 +19,14 @@ export const FavoritesProvider = ({ children }) => {
       const response = await fetch(`/api/favorites?userId=${userId}`);
       const data = await response.json();
 
-      if (data[0].imageIds && data[0].imageIds.length > 0) {
-        setFavorites(data[0].imageIds);
+      console.log("data inside Favorites context", data);
+
+      if (data && data.imageIds && data.imageIds.length > 0) {
+        setFavorites(data.imageIds);
         setHasFetched(true);
+      } else {
+        // If no favorites, set to empty array
+        setFavorites([]);
       }
     } catch (error) {
       console.error("Error fetching favorites:", error);
