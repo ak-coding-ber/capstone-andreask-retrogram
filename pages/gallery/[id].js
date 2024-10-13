@@ -59,14 +59,14 @@ export default function FotoDetailsPage() {
     }
   }, [foto, favorites]);
 
-  useEffect(() => {
-    if (comments.length || error) {
-      console.log("comments", comments);
-      console.log("error", error);
-    }
-  }, [comments, error]);
-
-  if (!isReady || isLoading || error || !foto || isLoadingComments)
+  if (
+    !isReady ||
+    isLoading ||
+    error ||
+    !foto ||
+    isLoadingComments ||
+    !sessionData
+  )
     return <h2>Loading...</h2>;
 
   // function handleRetroClick() {
@@ -75,7 +75,6 @@ export default function FotoDetailsPage() {
 
   async function handleAddComment(e) {
     e.preventDefault();
-    console.log("Button 'Add comment was clicked!'");
 
     const formData = new FormData(e.target);
     const commentData = Object.fromEntries(formData);
@@ -107,6 +106,8 @@ export default function FotoDetailsPage() {
       console.log("Comment submitted:", result);
     } catch (error) {
       console.error("Error when sending post request.", error);
+    } finally {
+      e.target.reset();
     }
   }
 
@@ -132,12 +133,30 @@ export default function FotoDetailsPage() {
           isLiked,
         }),
       });
+    } catch (error) {
+      console.error("Error updating favorites:", error);
+    }
+  }
+
+  async function handleClickDelete(commentId) {
+    try {
+      const response = await fetch(`/api/fotos/${id}/comments`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ commentId }),
+      });
 
       const result = await response.json();
 
-      // console.log("API Response:", result);
+      console.log(result);
+
+      if (response.ok) {
+        mutateComments();
+      }
     } catch (error) {
-      console.error("Error updating favorites:", error);
+      console.error({ message: "Frontend Delete Attempt failed." });
     }
   }
 
@@ -170,7 +189,13 @@ export default function FotoDetailsPage() {
             isLiked={isLiked}
           ></LikeButton>
         </ImageContainer>
-        <Comments comments={comments} onCommentAdd={handleAddComment} />
+        <Comments
+          comments={comments}
+          onCommentAdd={handleAddComment}
+          currentUserId={sessionData.user.userId}
+          currenUser={sessionData.user.name}
+          onClickDelete={handleClickDelete}
+        />
       </Layout>
     </>
   );

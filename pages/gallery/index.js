@@ -38,7 +38,6 @@ export default function GalleryPage() {
   }
 
   function handleImageClick(id) {
-    console.log("Clicked Image:", id);
     router.push(`/gallery/${id}`);
   }
 
@@ -63,14 +62,6 @@ export default function GalleryPage() {
           isLiked,
         }),
       });
-
-      const result = await response.json();
-      console.log("API Response:", result);
-
-      // // Refetch the favorites to ensure the updated data is loaded
-      // const updatedFavorites = await fetch(`/api/favorites?userId=${userId}`);
-      // const updatedData = await updatedFavorites.json();
-      // setFavorites(updatedData);
     } catch (error) {
       console.error("Error updating favorites:", error);
     }

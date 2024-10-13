@@ -54,7 +54,13 @@ const StyledSpan = styled.span`
 `;
 
 //{ foto, comments, onSubmit }
-export default function Comments({ comments, onCommentAdd }) {
+export default function Comments({
+  comments,
+  onCommentAdd,
+  currentUserId,
+  onClickDelete,
+  currentUser,
+}) {
   return (
     <>
       <h2>Comments</h2>
@@ -68,7 +74,7 @@ export default function Comments({ comments, onCommentAdd }) {
       </FormContainer>
       <ul
         style={{
-          width: "80%",
+          width: "100%",
           height: "auto",
           listStyle: "none",
           margin: "0",
@@ -83,8 +89,13 @@ export default function Comments({ comments, onCommentAdd }) {
             <StyledArticle key={comment._id}>
               <CommentContainer>
                 <StyledSpan>{comment.comment}</StyledSpan>
-                <p>Commented by: {comment.username}</p>
+                <p>by: {currentUser}</p>
               </CommentContainer>
+              {comment.userId.trim() === currentUserId.trim() ? (
+                <button onClick={() => onClickDelete(comment._id)}>
+                  Delete
+                </button>
+              ) : null}
             </StyledArticle>
           ))
         ) : (
