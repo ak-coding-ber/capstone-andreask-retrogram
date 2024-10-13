@@ -29,8 +29,7 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function FotoDetailsPage() {
-  const [retroMode, setRetroMode] = useState();
+export default function FotoDetailsPage({ onRetroClick, retroMode }) {
   const { favorites, setFavorites } = useFavorites();
   const { data: sessionData } = useSession();
   const router = useRouter();
@@ -68,10 +67,6 @@ export default function FotoDetailsPage() {
     !sessionData
   )
     return <h2>Loading...</h2>;
-
-  // function handleRetroClick() {
-  //   setRetroMode(!retroMode);
-  // }
 
   async function handleAddComment(e) {
     e.preventDefault();
@@ -189,6 +184,9 @@ export default function FotoDetailsPage() {
             isLiked={isLiked}
           ></LikeButton>
         </ImageContainer>
+        <button onClick={onRetroClick}>
+          {retroMode ? "NORMAL MODE" : "RETRO MODE"}
+        </button>
         <Comments
           comments={comments}
           onCommentAdd={handleAddComment}

@@ -3,7 +3,6 @@ import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { getSession, useSession } from "next-auth/react";
 import useSWR from "swr";
-import { useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useRouter } from "next/router";
 
@@ -26,16 +25,13 @@ export async function getServerSideProps(context) {
   };
 }
 
-export default function GalleryPage() {
-  const [retroMode, setRetroMode] = useState(false);
-  const { data, isLoading } = useSWR("/api/fotos", { fallbackData: [] });
+export default function GalleryPage({ onRetroClick, retroMode }) {
+  const { data, isLoading, mutate } = useSWR("/api/fotos", {
+    fallbackData: [],
+  });
   const { favorites, setFavorites } = useFavorites();
   const { data: sessionData } = useSession();
   const router = useRouter();
-
-  function handleRetroClick() {
-    setRetroMode(!retroMode);
-  }
 
   function handleImageClick(id) {
     router.push(`/gallery/${id}`);
@@ -62,6 +58,10 @@ export default function GalleryPage() {
           isLiked,
         }),
       });
+
+      if (response.ok) {
+        mutate();
+      }
     } catch (error) {
       console.error("Error updating favorites:", error);
     }
@@ -87,28 +87,7 @@ export default function GalleryPage() {
             onImageClick={handleImageClick}
           />
         )}
-        <code
-          style={{
-            display: "block",
-            width: "100%",
-            height: "12rem",
-            overflow: "auto",
-          }}
-        >
-          <pre
-            style={{
-              width: "100%",
-              height: "10rem",
-              whiteSpace: "pre-wrap",
-              wordWrap: "break-word",
-              overflow: "auto",
-            }}
-          >
-            {/* just temporary to see directly how the data is stored in my database*/}
-            {JSON.stringify(data[0], null, 2)}
-          </pre>
-        </code>
-        <button onClick={handleRetroClick}>
+        <button onClick={onRetroClick}>
           {retroMode ? "NORMAL MODE" : "RETRO MODE"}
         </button>
       </Layout>

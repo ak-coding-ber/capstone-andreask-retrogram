@@ -42,9 +42,6 @@ export default function FotoList({
   favorites,
   onImageClick,
 }) {
-  // console.log("favorites inside FotoList component", favorites);
-
-  // console.log(data[0]);
   return (
     <StyledList>
       {data.length &&
