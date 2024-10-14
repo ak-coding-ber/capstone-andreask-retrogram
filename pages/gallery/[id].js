@@ -5,33 +5,14 @@ import LikeButton from "@/components/Buttons/LikeButton/LikeButton";
 import Comments from "@/components/Comments/Comments";
 import ImageContainer from "@/components/ImageContainer/ImageContainer";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useRouter } from "next/router";
 
-export async function getServerSideProps(context) {
-  const sessionData = await getSession(context);
-
-  // If no sessionData, redirect to homepage
-  if (!sessionData) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  // Continue with page rendering if authenticated
-  return {
-    props: { sessionData },
-  };
-}
-
 export default function FotoDetailsPage({ onRetroClick, retroMode }) {
   const { favorites, setFavorites } = useFavorites();
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
   const router = useRouter();
   const { id } = router.query;
   const { isReady } = router;
@@ -52,11 +33,22 @@ export default function FotoDetailsPage({ onRetroClick, retroMode }) {
   } = useSWR(`/api/fotos/${id}/comments`, { fallbackData: [] });
 
   useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/"); // Redirect to homepage if user is not authenticated
+    }
+  }, [status, router]);
+
+  useEffect(() => {
     if (foto && favorites.length > 0) {
       const liked = favorites.some((favorite) => favorite._id === foto._id);
       setIsLiked(liked);
     }
   }, [foto, favorites]);
+
+  if (status === "loading") return <div>Loading...</div>;
+  if (status === "unauthenticated") {
+    return null;
+  }
 
   if (
     !isReady ||
@@ -128,6 +120,10 @@ export default function FotoDetailsPage({ onRetroClick, retroMode }) {
           isLiked,
         }),
       });
+
+      if (response.ok) {
+        mutate();
+      }
     } catch (error) {
       console.error("Error updating favorites:", error);
     }

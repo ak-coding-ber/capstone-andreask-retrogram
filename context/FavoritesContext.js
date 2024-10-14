@@ -19,8 +19,6 @@ export const FavoritesProvider = ({ children }) => {
       const response = await fetch(`/api/favorites?userId=${userId}`);
       const data = await response.json();
 
-      console.log("data inside Favorites context", data);
-
       if (data && data.imageIds && data.imageIds.length > 0) {
         setFavorites(data.imageIds);
         setHasFetched(true);

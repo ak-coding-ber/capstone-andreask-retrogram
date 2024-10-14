@@ -1,33 +1,29 @@
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { getSession } from "next-auth/react";
+import { useSession, status } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
 import Layout from "@/components/Layout/Layout";
-
-export async function getServerSideProps(context) {
-  const session = await getSession(context);
-
-  // If no session, redirect to homepage
-  if (!session) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  // Continue with page rendering if authenticated
-  return {
-    props: { session },
-  };
-}
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function UploadPage() {
   const [imageSrc, setImageSrc] = useState();
   const [description, setDescription] = useState();
   const [retroUrl, setRetroUrl] = useState();
+  const { data: sessionData, status } = useSession();
   // const [isGenerating, setIsGenerating] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/"); // Redirect to homepage
+    }
+  }, [status, router]);
+
+  if (status === "loading") return <div>Loading...</div>;
+  if (status === "unauthenticated") {
+    return null;
+  }
 
   function handleOnChange(changeEvent) {
     const reader = new FileReader();
