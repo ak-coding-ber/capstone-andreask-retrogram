@@ -11,6 +11,7 @@ export default function UploadPage() {
   const [description, setDescription] = useState();
   const [retroUrl, setRetroUrl] = useState();
   const { data: sessionData, status } = useSession();
+  const [errorMessage, setErrorMessage] = useState(null);
   // const [isGenerating, setIsGenerating] = useState(false);
   const router = useRouter();
 
@@ -26,13 +27,33 @@ export default function UploadPage() {
   }
 
   function handleOnChange(changeEvent) {
+    const file = changeEvent.target.files[0];
+    const maxSizeMB = 3; // Maximum file size in MB
+    const maxSizeBytes = maxSizeMB * 1024 * 1024; // Convert to bytes
     const reader = new FileReader();
 
-    reader.onload = function (onLoadEvent) {
-      setImageSrc(onLoadEvent.target.result);
-    };
+    if (file) {
+      if (file.size > maxSizeBytes) {
+        // File exceeds the maximum size
+        setErrorMessage(`File size exceeds the ${maxSizeMB} MB limit.`);
+        setImageSrc(null); // Remove image preview
+      } else {
+        // File size is valid, proceed
+        setErrorMessage(null);
 
-    reader.readAsDataURL(changeEvent.target.files[0]);
+        const reader = new FileReader();
+        reader.onload = function (onLoadEvent) {
+          setImageSrc(onLoadEvent.target.result); // Set image preview
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // reader.onload = function (onLoadEvent) {
+    //   setImageSrc(onLoadEvent.target.result);
+    // };
+
+    // reader.readAsDataURL(changeEvent.target.files[0]);
   }
 
   async function handleClickGenerate(e) {
@@ -41,7 +62,7 @@ export default function UploadPage() {
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
 
-    console.log(data.prompt);
+    const description = `16-Bit retro videogame style pixel art image of: ${data.prompt}`;
 
     const response = await fetch("/api/openai-dalle2", {
       method: "POST",
@@ -100,52 +121,58 @@ export default function UploadPage() {
         <h1>This will be the foto upload page!</h1>
         <LoginLogoutButton />
         <h1>Image Uploader</h1>
-        <p>Upload your original Image</p>
+        <p>Upload your original Image (max. 3MB)</p>
         <form method="post" onChange={handleOnChange}>
           <p>
             <input type="file" name="file" />
           </p>
+          {errorMessage && <p style={{ color: "red" }}>{errorMessage}</p>}
           {imageSrc && (
             <Image
-              width={512}
-              height={512}
+              width={300}
+              height={300}
               src={imageSrc}
               alt="your uploaded image"
-              style={{ maxWidth: "100%" }}
+              style={{ objectFit: "cover" }}
             ></Image>
           )}
         </form>
-        <h2>Pixel Image Generator</h2>
-        <p>Pease describe briefly what can be seen in your Image.</p>
-        <form
-          style={{ width: "80%", height: "10rem" }}
-          onSubmit={handleClickGenerate}
-        >
-          <label htmlFor="prompt">Prompt</label>
-          <textarea
-            type="text"
-            id="prompt"
-            name="prompt"
-            maxLength={100}
-            onChange={(e) => setDescription(e.target.value)}
-            style={{
-              width: "100%",
-              height: "6rem",
-              padding: "1rem",
-              border: "1px solid #ccc",
-              wordBreak: "break-all",
-            }}
-          />
-          <button type="submit">Generate</button>
-        </form>
+
+        {imageSrc && (
+          <>
+            <h2>Pixel Image Generator</h2>
+            <p>Pease describe briefly what can be seen in your Image.</p>
+            <form
+              style={{ width: "80%", height: "10rem" }}
+              onSubmit={handleClickGenerate}
+            >
+              <label htmlFor="prompt">Prompt</label>
+              <textarea
+                type="text"
+                id="prompt"
+                name="prompt"
+                maxLength={100}
+                onChange={(e) => setDescription(e.target.value)}
+                style={{
+                  width: "100%",
+                  height: "6rem",
+                  padding: "1rem",
+                  border: "1px solid #ccc",
+                  wordBreak: "break-all",
+                }}
+              />
+              <button type="submit">Generate</button>
+            </form>
+          </>
+        )}
+
         {retroUrl && (
           <Image
-            width={512}
-            height={512}
+            width={300}
+            height={300}
             src={retroUrl}
             alt="Generated Image"
             style={{
-              maxWidth: "100%",
               height: "auto",
               margin: "0 auto",
             }}
