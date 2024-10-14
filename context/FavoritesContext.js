@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect } from "react";
 import { useSession } from "next-auth/react";
+import useSWR from "swr";
 
 const FavoritesContext = createContext();
 
@@ -8,23 +9,30 @@ export const FavoritesProvider = ({ children }) => {
   const { data: sessionData } = useSession();
   const [hasFetched, setHasFetched] = useState(false);
 
+  const { data: favoritesData, isLoading: isLoadingFavorites } = useSWR(
+    sessionData?.user
+      ? `/api/favorites?userId=${sessionData.user.userId}`
+      : null
+  );
+
   useEffect(() => {
     if (sessionData?.user && !hasFetched) {
       getFavoritesData(sessionData.user.userId); // Fetch favorites when user is authenticated
     }
-  }, [sessionData?.user, hasFetched]);
+  });
 
   async function getFavoritesData(userId) {
     try {
-      const response = await fetch(`/api/favorites?userId=${userId}`);
-      const data = await response.json();
+      // const response = await fetch(`/api/favorites?userId=${userId}`);
+      // const data = await response.json();
 
-      if (data && data.imageIds && data.imageIds.length > 0) {
-        setFavorites(data.imageIds);
+      if (
+        favoritesData &&
+        favoritesData.imageIds &&
+        favoritesData.imageIds.length > 0
+      ) {
+        setFavorites(favoritesData.imageIds);
         setHasFetched(true);
-      } else {
-        // If no favorites, set to empty array
-        setFavorites([]);
       }
     } catch (error) {
       console.error("Error fetching favorites:", error);
@@ -32,7 +40,9 @@ export const FavoritesProvider = ({ children }) => {
   }
 
   return (
-    <FavoritesContext.Provider value={{ favorites, setFavorites }}>
+    <FavoritesContext.Provider
+      value={{ favorites, setFavorites, isLoadingFavorites }}
+    >
       {children}
     </FavoritesContext.Provider>
   );

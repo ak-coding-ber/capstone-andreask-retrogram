@@ -1,25 +1,25 @@
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { useSession, status } from "next-auth/react";
+import { useSession, getSession, status } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
 import Layout from "@/components/Layout/Layout";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 
-export default function UploadPage() {
+export default function UploadPage({ isAllowed }) {
   const [imageSrc, setImageSrc] = useState();
   const [description, setDescription] = useState();
   const [retroUrl, setRetroUrl] = useState();
   const { data: sessionData, status } = useSession();
   const [errorMessage, setErrorMessage] = useState(null);
   // const [isGenerating, setIsGenerating] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/"); // Redirect to homepage
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (status === "unauthenticated") {
+  //     router.push("/"); // Redirect to homepage
+  //   }
+  // }, [status, router]);
 
   if (status === "loading") return <div>Loading...</div>;
   if (status === "unauthenticated") {
@@ -115,6 +115,22 @@ export default function UploadPage() {
     }
   }
 
+  if (!isAllowed) {
+    return (
+      <Layout>
+        <div style={{ width: "300px" }}>
+          <h1 style={{ textAlign: "center" }}>Access Denied</h1>
+          <p style={{ textAlign: "center" }}>
+            This feature can only be accessed by admins. Please switch to
+            gallery or favorites page. Or <br /> <br />
+            Contact the admin, if you want to test the upload and image
+            generation feature.
+          </p>
+        </div>
+      </Layout>
+    );
+  }
+
   return (
     <>
       <Layout>
@@ -186,4 +202,28 @@ export default function UploadPage() {
       </Layout>
     </>
   );
+}
+
+export async function getServerSideProps(context) {
+  const session = await getSession(context);
+
+  // only users with allowed e-mail-address can access this feature
+  const allowedEmails = process.env.ALLOWED_EMAILS?.split(",");
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const isAllowed = allowedEmails.includes(session.user.email);
+
+  return {
+    props: {
+      isAllowed,
+    },
+  };
 }

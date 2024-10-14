@@ -11,7 +11,7 @@ export default function GalleryPage({ onRetroClick, retroMode }) {
   const { data, isLoading, mutate } = useSWR("/api/fotos", {
     fallbackData: [],
   });
-  const { favorites, setFavorites } = useFavorites();
+  const { favorites, setFavorites, isLoadingFavorites } = useFavorites();
   const { data: sessionData, status } = useSession();
   const router = useRouter();
 
@@ -60,7 +60,7 @@ export default function GalleryPage({ onRetroClick, retroMode }) {
     }
   }
 
-  if (isLoading) {
+  if (isLoading || isLoadingFavorites) {
     return null;
   }
 
