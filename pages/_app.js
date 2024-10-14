@@ -4,6 +4,18 @@ import { SWRConfig } from "swr";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import { Press_Start_2P, Orbitron } from "next/font/google";
+
+const pressStart2P = Press_Start_2P({
+  weight: "400",
+  subsets: ["latin"],
+});
+
+// alternative font
+// const orbitron = Orbitron({
+//   weight: "400",
+//   subsets: ["latin"],
+// });
 
 export default function App({
   Component,
@@ -46,12 +58,14 @@ export default function App({
         <SessionProvider session={session}>
           <GlobalStyle />
           <FavoritesProvider>
-            <Component
-              {...pageProps}
-              onImageClick={handleImageClick}
-              onRetroClick={handleRetroClick}
-              retroMode={retroMode}
-            />
+            <div className={pressStart2P.className} id="root">
+              <Component
+                {...pageProps}
+                onImageClick={handleImageClick}
+                onRetroClick={handleRetroClick}
+                retroMode={retroMode}
+              />
+            </div>
           </FavoritesProvider>
         </SessionProvider>
       </SWRConfig>

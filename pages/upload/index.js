@@ -3,8 +3,6 @@ import { useSession, getSession, status } from "next-auth/react";
 import { useState } from "react";
 import Image from "next/image";
 import Layout from "@/components/Layout/Layout";
-import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export default function UploadPage({ isAllowed }) {
   const [imageSrc, setImageSrc] = useState();
@@ -12,14 +10,6 @@ export default function UploadPage({ isAllowed }) {
   const [retroUrl, setRetroUrl] = useState();
   const { data: sessionData, status } = useSession();
   const [errorMessage, setErrorMessage] = useState(null);
-  // const [isGenerating, setIsGenerating] = useState(false);
-  // const router = useRouter();
-
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     router.push("/"); // Redirect to homepage
-  //   }
-  // }, [status, router]);
 
   if (status === "loading") return <div>Loading...</div>;
   if (status === "unauthenticated") {
@@ -48,12 +38,6 @@ export default function UploadPage({ isAllowed }) {
         reader.readAsDataURL(file);
       }
     }
-
-    // reader.onload = function (onLoadEvent) {
-    //   setImageSrc(onLoadEvent.target.result);
-    // };
-
-    // reader.readAsDataURL(changeEvent.target.files[0]);
   }
 
   async function handleClickGenerate(e) {
@@ -134,7 +118,6 @@ export default function UploadPage({ isAllowed }) {
   return (
     <>
       <Layout>
-        <h1>This will be the foto upload page!</h1>
         <LoginLogoutButton />
         <h1>Image Uploader</h1>
         <p>Upload your original Image (max. 3MB)</p>

@@ -1,12 +1,14 @@
 import { useSession, signIn, signOut } from "next-auth/react";
+import styled from "styled-components";
 
 export default function LoginLogoutButton() {
   const { data: session } = useSession();
   if (session) {
     return (
       <>
-        Signed in as {session.user.email} <br />
-        <br />
+        <p style={{ paddingTop: "20px", lineHeight: "2" }}>
+          Signed in as {session.user.email}
+        </p>
         <button onClick={() => signOut()}>Sign out</button>
       </>
     );

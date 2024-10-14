@@ -6,6 +6,7 @@ import useSWR from "swr";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import RetroButton from "@/components/Buttons/RetroButton/RetroButton";
 
 export default function GalleryPage({ onRetroClick, retroMode }) {
   const { data, isLoading, mutate } = useSWR("/api/fotos", {
@@ -67,7 +68,6 @@ export default function GalleryPage({ onRetroClick, retroMode }) {
   return (
     <>
       <Layout>
-        <h1>This will be the gallery page!</h1>
         <LoginLogoutButton />
         <br />
         <br />
@@ -80,9 +80,7 @@ export default function GalleryPage({ onRetroClick, retroMode }) {
             onImageClick={handleImageClick}
           />
         )}
-        <button onClick={onRetroClick}>
-          {retroMode ? "NORMAL MODE" : "RETRO MODE"}
-        </button>
+        <RetroButton onRetroClick={onRetroClick} retroMode={retroMode} />
       </Layout>
     </>
   );
