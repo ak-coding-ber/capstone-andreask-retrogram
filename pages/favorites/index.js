@@ -1,28 +1,10 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useFavorites } from "@/context/FavoritesContext";
-import useSWR from "swr";
-
-export async function getServerSideProps(context) {
-  const sessionData = await getSession(context);
-
-  // If no sessionData, redirect to homepage
-  if (!sessionData) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
-
-  // Continue with page rendering if authenticated
-  return {
-    props: { sessionData },
-  };
-}
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 export default function FavoritesPage({
   onImageClick,
@@ -30,7 +12,19 @@ export default function FavoritesPage({
   retroMode,
 }) {
   const { favorites, setFavorites } = useFavorites();
-  const { data: sessionData } = useSession();
+  const { data: sessionData, status } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/"); // Redirect to homepage
+    }
+  }, [status, router]);
+
+  if (status === "loading") return <div>Loading...</div>;
+  if (status === "unauthenticated") {
+    return null;
+  }
 
   async function handleLikeClick(foto, isLiked) {
     if (isLiked) {
