@@ -71,6 +71,7 @@ export default function GalleryPage({ onRetroClick, retroMode }) {
         <LoginLogoutButton />
         <br />
         <br />
+        <RetroButton onRetroClick={onRetroClick} retroMode={retroMode} />
         {data.length && (
           <FotoList
             data={data}
@@ -80,7 +81,6 @@ export default function GalleryPage({ onRetroClick, retroMode }) {
             onImageClick={handleImageClick}
           />
         )}
-        <RetroButton onRetroClick={onRetroClick} retroMode={retroMode} />
       </Layout>
     </>
   );

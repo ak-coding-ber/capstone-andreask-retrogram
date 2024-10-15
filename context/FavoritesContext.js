@@ -5,43 +5,32 @@ import useSWR from "swr";
 const FavoritesContext = createContext();
 
 export const FavoritesProvider = ({ children }) => {
-  const [favorites, setFavorites] = useState([]);
   const { data: sessionData } = useSession();
-  const [hasFetched, setHasFetched] = useState(false);
+  const [favorites, setFavorites] = useState([]);
 
-  const { data: favoritesData, isLoading: isLoadingFavorites } = useSWR(
+  const {
+    data: favoritesData,
+    isLoading: isLoadingFavorites,
+    errorFavorites,
+  } = useSWR(
     sessionData?.user
       ? `/api/favorites?userId=${sessionData.user.userId}`
       : null
   );
 
   useEffect(() => {
-    if (sessionData?.user && !hasFetched) {
-      getFavoritesData(sessionData.user.userId); // Fetch favorites when user is authenticated
+    if (favoritesData?.imageIds) {
+      setFavorites(favoritesData.imageIds);
     }
-  });
+  }, [favoritesData]);
 
-  async function getFavoritesData(userId) {
-    try {
-      // const response = await fetch(`/api/favorites?userId=${userId}`);
-      // const data = await response.json();
-
-      if (
-        favoritesData &&
-        favoritesData.imageIds &&
-        favoritesData.imageIds.length > 0
-      ) {
-        setFavorites(favoritesData.imageIds);
-        setHasFetched(true);
-      }
-    } catch (error) {
-      console.error("Error fetching favorites:", error);
-    }
+  if (isLoadingFavorites) {
+    null;
   }
 
   return (
     <FavoritesContext.Provider
-      value={{ favorites, setFavorites, isLoadingFavorites }}
+      value={{ favorites, isLoadingFavorites, setFavorites }}
     >
       {children}
     </FavoritesContext.Provider>

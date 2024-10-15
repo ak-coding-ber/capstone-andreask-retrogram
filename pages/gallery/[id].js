@@ -157,7 +157,11 @@ export default function FotoDetailsPage({ onRetroClick, retroMode }) {
       <Layout>
         <LoginLogoutButton />
         <br />
-        <br />
+        <RetroButton
+          $variant={"details-page"}
+          onRetroClick={onRetroClick}
+          retroMode={retroMode}
+        />
         <ImageContainer $size={300}>
           <Image
             width={300}
