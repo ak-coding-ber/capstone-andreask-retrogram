@@ -16,14 +16,14 @@ export const StyledStandardButton = styled.button`
   color: white;
   border: white solid 3px;
 
-  &:hover {
-    background-color: var(--primary-color);
-  }
-
   ${(props) =>
     props.$variant === "logout" &&
     `width: 130px;
     height: 50px;
+    &:hover {
+    background-color: var(--primary-color);
+  }
+
   `};
 
   ${(props) =>
@@ -31,6 +31,10 @@ export const StyledStandardButton = styled.button`
     `width: 130px;
     height: 50px;
     justify-self: center;
+        &:hover {
+    background-color: var(--primary-color);
+  }
+
   `};
 
   ${(props) =>
@@ -39,7 +43,25 @@ export const StyledStandardButton = styled.button`
     height: 40px;
       &:hover {
     background-color: red;
+  }`};
+
+  ${(props) =>
+    (props.$variant === "generate" || props.$variant === "upload") &&
+    `width: 180px;
+    height: 80px;
+    align-self: center;
+    &:hover {
+    background-color: var(--primary-color);
   }
+
+  `};
+
+  ${(props) =>
+    (props.$variant === "generating" || props.$variant === "uploading") &&
+    `width: 180px;
+    height: 80px;
+    align-self: center;
+    background-color: var(--backgroundcolor);
   `};
 `;
 

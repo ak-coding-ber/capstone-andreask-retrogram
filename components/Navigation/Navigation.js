@@ -16,6 +16,11 @@ const StyledLayout = styled.div`
     font-size: 20px;
     font-weight: 500;
     color: black;
+    text-align: center;
+
+    @media (max-width: 580px) {
+      font-size: 14px;
+    }
   }
 `;
 
