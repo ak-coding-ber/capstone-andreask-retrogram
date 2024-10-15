@@ -1,10 +1,11 @@
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
 import { useSession, getSession, status } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Layout from "@/components/Layout/Layout";
+import PromptForm from "@/components/PromptForm/PromptForm";
+import StandardButton from "@/components/Buttons/StandardButton/StandardButton";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
 
 export default function UploadPage({ isAllowed }) {
   const [imageSrc, setImageSrc] = useState();
@@ -12,14 +13,21 @@ export default function UploadPage({ isAllowed }) {
   const [retroUrl, setRetroUrl] = useState();
   const { data: sessionData, status } = useSession();
   const [errorMessage, setErrorMessage] = useState(null);
-  // const [isGenerating, setIsGenerating] = useState(false);
-  // const router = useRouter();
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadComplete, setUploadComplete] = useState(false);
+  const router = useRouter();
 
-  // useEffect(() => {
-  //   if (status === "unauthenticated") {
-  //     router.push("/"); // Redirect to homepage
-  //   }
-  // }, [status, router]);
+  useEffect(() => {
+    if (uploadComplete) {
+      // Delay the redirection by 2 seconds after an image was successfully uploaded
+      const timer = setTimeout(() => {
+        router.push("/gallery");
+      }, 4000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [uploadComplete, router]);
 
   if (status === "loading") return <div>Loading...</div>;
   if (status === "unauthenticated") {
@@ -30,7 +38,6 @@ export default function UploadPage({ isAllowed }) {
     const file = changeEvent.target.files[0];
     const maxSizeMB = 3; // Maximum file size in MB
     const maxSizeBytes = maxSizeMB * 1024 * 1024; // Convert to bytes
-    const reader = new FileReader();
 
     if (file) {
       if (file.size > maxSizeBytes) {
@@ -48,16 +55,12 @@ export default function UploadPage({ isAllowed }) {
         reader.readAsDataURL(file);
       }
     }
-
-    // reader.onload = function (onLoadEvent) {
-    //   setImageSrc(onLoadEvent.target.result);
-    // };
-
-    // reader.readAsDataURL(changeEvent.target.files[0]);
   }
 
   async function handleClickGenerate(e) {
     e.preventDefault();
+
+    setIsGenerating(true);
 
     const formData = new FormData(e.target);
     const data = Object.fromEntries(formData);
@@ -71,11 +74,17 @@ export default function UploadPage({ isAllowed }) {
     });
 
     const result = await response.json();
+
+    if (response.ok) {
+      setIsGenerating(false);
+    }
+
     setRetroUrl(result.imageUrl);
   }
 
   async function handleClickUpload(e) {
     // trigger both uploads in parallel
+    setIsUploading(true);
     const [responseRetro, responseLocal] = await Promise.all([
       fetch("/api/cloudinary/upload-from-link", {
         method: "POST",
@@ -107,6 +116,8 @@ export default function UploadPage({ isAllowed }) {
 
       if (response.ok) {
         console.log("Upload to MongoDB successful");
+        setIsUploading(false);
+        setUploadComplete(true);
       } else {
         console.error("Failed to upload to MongoDB");
       }
@@ -118,6 +129,7 @@ export default function UploadPage({ isAllowed }) {
   if (!isAllowed) {
     return (
       <Layout>
+        <LoginLogoutButton />
         <div style={{ width: "300px" }}>
           <h1 style={{ textAlign: "center" }}>Access Denied</h1>
           <p style={{ textAlign: "center" }}>
@@ -134,10 +146,19 @@ export default function UploadPage({ isAllowed }) {
   return (
     <>
       <Layout>
-        <h1>This will be the foto upload page!</h1>
         <LoginLogoutButton />
-        <h1>Image Uploader</h1>
-        <p>Upload your original Image (max. 3MB)</p>
+        <h1 style={{ textAlign: "center", lineHeight: "1.5" }}>
+          Image Uploader
+        </h1>
+        <p
+          style={{
+            textAlign: "center",
+            lineHeight: "2",
+            color: "var(--primary-color)",
+          }}
+        >
+          Upload your original Foto (max. 3MB)
+        </p>
         <form method="post" onChange={handleOnChange}>
           <p>
             <input type="file" name="file" />
@@ -156,29 +177,23 @@ export default function UploadPage({ isAllowed }) {
 
         {imageSrc && (
           <>
-            <h2>Pixel Image Generator</h2>
-            <p>Pease describe briefly what can be seen in your Image.</p>
-            <form
-              style={{ width: "80%", height: "10rem" }}
-              onSubmit={handleClickGenerate}
+            <h1 style={{ textAlign: "center", lineHeight: "1.5" }}>
+              Pixel Image Generator
+            </h1>
+            <p
+              style={{
+                textAlign: "center",
+                lineHeight: "2",
+                color: "var(--primary-color)",
+              }}
             >
-              <label htmlFor="prompt">Prompt</label>
-              <textarea
-                type="text"
-                id="prompt"
-                name="prompt"
-                maxLength={100}
-                onChange={(e) => setDescription(e.target.value)}
-                style={{
-                  width: "100%",
-                  height: "6rem",
-                  padding: "1rem",
-                  border: "1px solid #ccc",
-                  wordBreak: "break-all",
-                }}
-              />
-              <button type="submit">Generate</button>
-            </form>
+              Please describe briefly what can be seen in your Foto.
+            </p>
+            <PromptForm
+              onSubmit={handleClickGenerate}
+              setDescription={setDescription}
+              isGenerating={isGenerating}
+            />
           </>
         )}
 
@@ -195,8 +210,21 @@ export default function UploadPage({ isAllowed }) {
           ></Image>
         )}
         {retroUrl && (
-          <p>
-            <button onClick={handleClickUpload}>Upload both Images</button>
+          <StandardButton
+            text={isUploading ? "UPLOADING" : "UPLOAD"}
+            $variant={isUploading ? "uploading" : "upload"}
+            onClick={handleClickUpload}
+          />
+        )}
+        {uploadComplete && (
+          <p
+            style={{
+              textAlign: "center",
+              lineHeight: "2",
+              color: "var(--primary-color)",
+            }}
+          >
+            Your Image Upload was successful!.
           </p>
         )}
       </Layout>

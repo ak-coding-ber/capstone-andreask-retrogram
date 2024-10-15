@@ -2,10 +2,12 @@ import { createGlobalStyle } from "styled-components";
 
 export default createGlobalStyle`
   :root {
-    --primary-color: #24DC58;
+    --primary-color: #14AE5C;
     --secondary-color: #0F4029;
-    --background-color: black;
+    --background-color: #1E1E1E;
     --text-color: white;
+    font-size: 14px;
+
   }
   *,
   *::before,
@@ -16,7 +18,7 @@ export default createGlobalStyle`
   body {
     width:100%;
     margin: 0;
-    font-family: system-ui;
+    font-family: inherit;
     background-color: var(--background-color);
     color: white;
   }

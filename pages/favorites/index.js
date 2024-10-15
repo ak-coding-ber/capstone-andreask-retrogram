@@ -1,6 +1,7 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
+import RetroButton from "@/components/Buttons/RetroButton/RetroButton";
 import { useSession } from "next-auth/react";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useRouter } from "next/router";
@@ -58,10 +59,10 @@ export default function FavoritesPage({
   return (
     <>
       <Layout>
-        <h1>This will be the favorites page!</h1>
         <LoginLogoutButton />
         <br />
         <br />
+        <RetroButton onRetroClick={onRetroClick} retroMode={retroMode} />
         {favorites.length && (
           <FotoList
             retroMode={retroMode}
@@ -71,10 +72,6 @@ export default function FavoritesPage({
             onImageClick={onImageClick}
           />
         )}
-
-        <button onClick={onRetroClick}>
-          {retroMode ? "NORMAL MODE" : "RETRO MODE"}
-        </button>
       </Layout>
     </>
   );

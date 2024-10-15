@@ -1,11 +1,13 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
+import StandardButton from "@/components/Buttons/StandardButton/StandardButton";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { useFavorites } from "@/context/FavoritesContext";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
+import RetroButton from "@/components/Buttons/RetroButton/RetroButton";
 
 export default function GalleryPage({ onRetroClick, retroMode }) {
   const { data, isLoading, mutate } = useSWR("/api/fotos", {
@@ -67,10 +69,10 @@ export default function GalleryPage({ onRetroClick, retroMode }) {
   return (
     <>
       <Layout>
-        <h1>This will be the gallery page!</h1>
         <LoginLogoutButton />
         <br />
         <br />
+        <RetroButton onRetroClick={onRetroClick} retroMode={retroMode} />
         {data.length && (
           <FotoList
             data={data}
@@ -80,9 +82,6 @@ export default function GalleryPage({ onRetroClick, retroMode }) {
             onImageClick={handleImageClick}
           />
         )}
-        <button onClick={onRetroClick}>
-          {retroMode ? "NORMAL MODE" : "RETRO MODE"}
-        </button>
       </Layout>
     </>
   );

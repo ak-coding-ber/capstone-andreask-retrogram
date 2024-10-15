@@ -5,6 +5,7 @@ import LikeButton from "@/components/Buttons/LikeButton/LikeButton";
 import Comments from "@/components/Comments/Comments";
 import ImageContainer from "@/components/ImageContainer/ImageContainer";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
+import RetroButton from "@/components/Buttons/RetroButton/RetroButton";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useFavorites } from "@/context/FavoritesContext";
@@ -154,12 +155,13 @@ export default function FotoDetailsPage({ onRetroClick, retroMode }) {
   return (
     <>
       <Layout>
-        <p style={{ textAlign: "center" }}>
-          This will be the details page for Image {`${id}`}
-        </p>
         <LoginLogoutButton />
         <br />
-        <br />
+        <RetroButton
+          $variant={"details-page"}
+          onRetroClick={onRetroClick}
+          retroMode={retroMode}
+        />
         <ImageContainer $size={300}>
           <Image
             width={300}
@@ -180,9 +182,6 @@ export default function FotoDetailsPage({ onRetroClick, retroMode }) {
             isLiked={isLiked}
           ></LikeButton>
         </ImageContainer>
-        <button onClick={onRetroClick}>
-          {retroMode ? "NORMAL MODE" : "RETRO MODE"}
-        </button>
         <Comments
           comments={comments}
           onCommentAdd={handleAddComment}

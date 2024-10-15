@@ -9,7 +9,7 @@ const StyledImageContainer = styled.div`
   width: ${({ $size }) => $size}px;
   height: ${({ $size }) => $size}px;
   position: relative;
-  max-width: 80%;
+  max-width: 100%;
   display: inline-block;
 `;
 
