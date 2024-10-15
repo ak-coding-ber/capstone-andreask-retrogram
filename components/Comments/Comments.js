@@ -12,13 +12,6 @@ const Input = styled.input`
   border-radius: 0.5rem;
 `;
 
-const Textarea = styled.textarea`
-  font-family: inherit;
-  border: 1px solid #344e41;
-  border-radius: 0.5rem;
-  padding: 0.5rem;
-`;
-
 const Label = styled.label`
   font-weight: bold;
 `;
@@ -59,7 +52,6 @@ export default function Comments({
   onCommentAdd,
   currentUserId,
   onClickDelete,
-  currentUser,
 }) {
   return (
     <>

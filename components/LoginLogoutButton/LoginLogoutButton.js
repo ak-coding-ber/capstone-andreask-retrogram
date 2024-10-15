@@ -1,5 +1,11 @@
 import { useSession, signIn, signOut } from "next-auth/react";
-import styled from "styled-components";
+import StandardButton from "../Buttons/StandardButton/StandardButton";
+import { Press_Start_2P } from "@next/font/google";
+
+const pressStart2P = Press_Start_2P({
+  weight: "400",
+  subsets: ["latin"],
+});
 
 export default function LoginLogoutButton() {
   const { data: session } = useSession();
@@ -9,9 +15,19 @@ export default function LoginLogoutButton() {
         <p style={{ paddingTop: "20px", lineHeight: "2" }}>
           Signed in as {session.user.email}
         </p>
-        <button onClick={() => signOut()}>Sign out</button>
+        <StandardButton
+          onClick={() => signOut()}
+          text={"Logout"}
+          className={pressStart2P.className}
+        ></StandardButton>
       </>
     );
   }
-  return <button onClick={() => signIn()}>Sign in</button>;
+  return (
+    <StandardButton
+      onClick={() => signIn()}
+      text={"LOGIN"}
+      className={pressStart2P.className}
+    ></StandardButton>
+  );
 }

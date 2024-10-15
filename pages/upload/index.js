@@ -20,7 +20,6 @@ export default function UploadPage({ isAllowed }) {
     const file = changeEvent.target.files[0];
     const maxSizeMB = 3; // Maximum file size in MB
     const maxSizeBytes = maxSizeMB * 1024 * 1024; // Convert to bytes
-    const reader = new FileReader();
 
     if (file) {
       if (file.size > maxSizeBytes) {

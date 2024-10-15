@@ -62,6 +62,7 @@ export default function FavoritesPage({
         <LoginLogoutButton />
         <br />
         <br />
+        <RetroButton onRetroClick={onRetroClick} retroMode={retroMode} />
         {favorites.length && (
           <FotoList
             retroMode={retroMode}
@@ -71,8 +72,6 @@ export default function FavoritesPage({
             onImageClick={onImageClick}
           />
         )}
-
-        <RetroButton onRetroClick={onRetroClick} retroMode={retroMode} />
       </Layout>
     </>
   );

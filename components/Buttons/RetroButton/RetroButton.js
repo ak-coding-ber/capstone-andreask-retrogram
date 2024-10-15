@@ -16,7 +16,6 @@ const StyledRetroButton = styled.button.withConfig({
   cursor: pointer;
   background-color: ${(props) =>
     props.retroMode ? "var(--secondary-color)" : "#c10f8a"};
-  border: 0;
   color: white;
   border: white solid 3px;
   position: fixed;

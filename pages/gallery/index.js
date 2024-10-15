@@ -1,6 +1,7 @@
 import FotoList from "@/components/FotoList/FotoList";
 import Layout from "@/components/Layout/Layout";
 import LoginLogoutButton from "@/components/LoginLogoutButton/LoginLogoutButton";
+import StandardButton from "@/components/Buttons/StandardButton/StandardButton";
 import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { useFavorites } from "@/context/FavoritesContext";
