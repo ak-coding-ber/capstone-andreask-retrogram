@@ -15,6 +15,32 @@ export const StyledStandardButton = styled.button`
   background-color: var(--secondary-color);
   color: white;
   border: white solid 3px;
+
+  &:hover {
+    background-color: var(--primary-color);
+  }
+
+  ${(props) =>
+    props.$variant === "logout" &&
+    `width: 130px;
+    height: 50px;
+  `};
+
+  ${(props) =>
+    props.$variant === "comment-submit" &&
+    `width: 130px;
+    height: 50px;
+    justify-self: center;
+  `};
+
+  ${(props) =>
+    props.$variant === "delete" &&
+    `width: 40px;
+    height: 40px;
+      &:hover {
+    background-color: red;
+  }
+  `};
 `;
 
 export default function StandardButton({ onClick, $variant, text }) {

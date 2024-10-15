@@ -20,8 +20,7 @@ const StyledRetroButton = styled.button.withConfig({
   border: white solid 3px;
   position: fixed;
   bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: 150px;
   z-index: 3;
   transition: background-color 0.3s ease;
 
@@ -33,15 +32,15 @@ const StyledRetroButton = styled.button.withConfig({
 
   ${(props) =>
     props.$variant === "details-page" &&
-    `position: relative;
-    bottom: 0px;
-    left: 0;
-    transform: translateX(0%);
+    `position: fixed;
+    bottom: 50px;
+    right: 150px;
+    z-index:0;
   `};
 
-  @media (max-width: 768px) {
+  @media (max-width: 1600px) {
     position: relative;
-    bottom: 0px;
+    top: 0px;
     left: 0;
     transform: translateX(0%);
     z-index: 0;

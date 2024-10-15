@@ -4,7 +4,7 @@ import Navigation from "../Navigation/Navigation";
 
 const Main = styled.main`
   width: 100%;
-  margin: 100px auto 0 auto;
+  margin: 100px auto 100px auto;
   display: flex;
   flex-direction: column;
   gap: 10px;

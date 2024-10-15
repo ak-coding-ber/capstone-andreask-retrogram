@@ -139,7 +139,7 @@ export default function UploadPage({ isAllowed }) {
         {imageSrc && (
           <>
             <h2>Pixel Image Generator</h2>
-            <p>Pease describe briefly what can be seen in your Image.</p>
+            <p>Please describe briefly what can be seen in your Image.</p>
             <form
               style={{ width: "80%", height: "10rem" }}
               onSubmit={handleClickGenerate}

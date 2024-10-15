@@ -12,13 +12,21 @@ export default function LoginLogoutButton() {
   if (session) {
     return (
       <>
-        <p style={{ paddingTop: "20px", lineHeight: "2" }}>
+        <p
+          style={{
+            paddingTop: "20px",
+            lineHeight: "2",
+            fontSize: "12px",
+            textAlign: "center",
+          }}
+        >
           Signed in as {session.user.email}
         </p>
         <StandardButton
           onClick={() => signOut()}
           text={"Logout"}
           className={pressStart2P.className}
+          $variant={"logout"}
         ></StandardButton>
       </>
     );
