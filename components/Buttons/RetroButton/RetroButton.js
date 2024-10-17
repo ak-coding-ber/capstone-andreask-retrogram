@@ -33,7 +33,6 @@ const StyledRetroButton = styled.button.withConfig({
     !props.retroMode &&
     `animation: neon-flicker 1.5s infinite;
      background-color: #ff33cc;
-    //  overflow: hidden;
   `};
 
   ${(props) =>
