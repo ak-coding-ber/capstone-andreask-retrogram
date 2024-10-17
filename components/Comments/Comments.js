@@ -107,6 +107,7 @@ export default function Comments({
           height: "auto",
           listStyle: "none",
           margin: "0",
+          padding: "30px",
           lineClamp: "none",
           position: "relative",
           maxWidth: "700px",

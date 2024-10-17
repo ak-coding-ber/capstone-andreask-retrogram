@@ -17,7 +17,7 @@ export const StyledStandardButton = styled.button`
   border: white solid 3px;
 
   ${(props) =>
-    props.$variant === "logout" &&
+    (props.$variant === "logout" || props.$variant === "login") &&
     `width: 130px;
     height: 50px;
     &:hover {

@@ -67,7 +67,7 @@ export default function UploadPage({ isAllowed }) {
 
     const description = `16-Bit retro videogame style pixel art image of: ${data.prompt}`;
 
-    const response = await fetch("/api/openai-dalle2", {
+    const response = await fetch("/api/openai-dalle-3", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ prompt: description }),

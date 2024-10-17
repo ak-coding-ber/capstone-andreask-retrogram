@@ -16,7 +16,7 @@ export const authOptions = {
     }),
   ],
   adapter: MongoDBAdapter(clientPromise),
-  debug: true,
+  debug: false,
   callbacks: {
     async session({ session, user }) {
       // The user object from the database contains the ID of the user in your database
