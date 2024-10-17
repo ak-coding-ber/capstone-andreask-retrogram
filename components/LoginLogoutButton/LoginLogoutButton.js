@@ -14,7 +14,7 @@ export default function LoginLogoutButton() {
       <>
         <p
           style={{
-            paddingTop: "20px",
+            marginTop: "20px",
             lineHeight: "2",
             fontSize: "12px",
             textAlign: "center",
@@ -36,6 +36,7 @@ export default function LoginLogoutButton() {
       onClick={() => signIn()}
       text={"LOGIN"}
       className={pressStart2P.className}
+      $variant={"login"}
     ></StandardButton>
   );
 }

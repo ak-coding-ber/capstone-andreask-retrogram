@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const StyledList = styled.ul`
   padding: 0;
-  margin: 0;
+  margin: 20px 0;
   display: grid;
   grid-template-columns: repeat(auto-fit, 200px);
   column-gap: 1rem;

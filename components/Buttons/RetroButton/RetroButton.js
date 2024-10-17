@@ -22,12 +22,18 @@ const StyledRetroButton = styled.button.withConfig({
   bottom: 50px;
   right: 150px;
   z-index: 3;
-  transition: background-color 0.3s ease;
+
+  ${(props) =>
+    props.retroMode &&
+    `&:hover {
+      background-color: var(--primary-color);
+    }`};
 
   ${(props) =>
     !props.retroMode &&
     `animation: neon-flicker 1.5s infinite;
      background-color: #ff33cc;
+    //  overflow: hidden;
   `};
 
   ${(props) =>
@@ -40,7 +46,7 @@ const StyledRetroButton = styled.button.withConfig({
 
   @media (max-width: 1600px) {
     position: relative;
-    top: 0px;
+    top: 0;
     left: 0;
     transform: translateX(0%);
     z-index: 0;

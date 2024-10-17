@@ -8,7 +8,7 @@ const Main = styled.main`
   display: flex;
   flex-direction: column;
   gap: 10px;
-  justify-content: center;
+  justif-content: flex-start;
   align-items: center;
 
   @media (min-width: 1000px) {
